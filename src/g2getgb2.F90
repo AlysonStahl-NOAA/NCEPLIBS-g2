@@ -357,7 +357,7 @@ subroutine getgb2l2(lugb, idxver, cindex, gfld, iret)
   integer, intent(out) :: iret
 
   integer :: lskip, skip2
-  integer (kind = 8) :: lskip8, iskip8, lread8, ilen8
+  integer (kind = 8) :: lskip8, iskip8, lread8, ilen8, skip28
   character(len = 1):: csize(4)
   character(len = 1), allocatable :: ctemp(:)
   integer :: ilen, iofst, ierr
@@ -379,20 +379,30 @@ subroutine getgb2l2(lugb, idxver, cindex, gfld, iret)
   ! Get info.
   nullify(gfld%local)
   iret = 0
-  mypos = INT4_BITS
+  mypos = INT4_BITS ! Skip length of index record.
+
+  ! These are all 4-byte ints in index format 1, and 8-byte ints in
+  ! index version 2.
   if (idxver .eq. 1) then
+     ! Read bytes to skip in file before message.
      call g2_gbytec(cindex, lskip, mypos, INT4_BITS)
      mypos = mypos + INT4_BITS
      lskip8 = lskip
+     ! Read bytes to skip in msg before local use.
+     call g2_gbytec(cindex, skip2, mypos, INT4_BITS)
+     skip28 = skip2
   else
+     ! Read bytes to skip in file before message.
      call g2_gbytec8(cindex, lskip8, mypos, INT8_BITS)
      mypos = mypos + INT8_BITS
+     ! Read bytes to skip in msg before local use.
+     call g2_gbytec8(cindex, skip28, mypos, INT8_BITS)
+     mypos = mypos + INT8_BITS
   endif
-  call g2_gbytec(cindex, skip2, mypos, INT4_BITS)
 
   ! Read and unpack local use section, if present.
-  if (skip2 .ne. 0) then
-     iskip8 = lskip8 + skip2
+  if (skip28 .ne. 0) then
+     iskip8 = lskip8 + skip28
 
      ! Get length of section.
      call bareadl(lugb, iskip8, 4_8, lread8, csize)    
@@ -811,7 +821,7 @@ subroutine getgb2r2(lugb, idxver, cindex, gfld, iret)
      call g2_gbytec(cindex, lskip, INT4_BITS, INT4_BITS)
      lskip8 = lskip
   else
-     inc = 4
+     inc = 12
      call g2_gbytec8(cindex, lskip8, INT4_BITS, INT8_BITS)
      lskip = int(lskip8, kind(4))
   endif
@@ -999,6 +1009,7 @@ subroutine getgb2rp2(lugb, idxver, cindex, extract, gribm, leng, iret)
   integer :: lencur, len0, ibmap = 0, ipos, iskip
   integer :: len7 = 0, len8 = 0, len3 = 0, len4 = 0, len5 = 0, len6 = 0, len1 = 0, len2 = 0
   integer :: iskp2, iskp6, iskp7
+  integer (kind = 8) :: iskp2_8
   integer :: INT1_BITS, INT2_BITS, INT4_BITS, INT8_BITS
   parameter(INT1_BITS = 8, INT2_BITS = 16, INT4_BITS = 32, INT8_BITS = 64)
   integer :: mypos, inc = 0
@@ -1015,20 +1026,23 @@ subroutine getgb2rp2(lugb, idxver, cindex, extract, gribm, leng, iret)
         call g2_gbytec(cindex, iskip, mypos, INT4_BITS)    ! bytes to skip in file
         mypos = mypos + INT4_BITS
         iskip8 = iskip
+        call g2_gbytec(cindex, iskp2, mypos, INT4_BITS)    ! bytes to skip for section 2
+        mypos = mypos + INT4_BITS
+        iskp2_8 = iskp2
      else
-        inc = 4
+        inc = 12
         call g2_gbytec8(cindex, iskip8, mypos, INT8_BITS)    ! bytes to skip in file
         mypos = mypos + INT8_BITS
         iskip = int(iskip8, kind(4))
+        call g2_gbytec8(cindex, iskp2_8, mypos, INT8_BITS)    ! bytes to skip for section 2
+        mypos = mypos + INT8_BITS
      endif
-     call g2_gbytec(cindex, iskp2, mypos, INT4_BITS)    ! bytes to skip for section 2
-     mypos = mypos + INT4_BITS
-     if (iskp2 .gt. 0) then
-        call bareadl(lugb, iskip8 + iskp2, 4_8, lread8, ctemp)
+     if (iskp2_8 .gt. 0) then
+        call bareadl(lugb, iskip8 + iskp2_8, 4_8, lread8, ctemp)
         call g2_gbytec(ctemp, len2, 0, INT4_BITS)      ! length of section 2
         allocate(csec2(len2))
         len2_8 = len2
-        call bareadl(lugb, iskip8 + iskp2, len2_8, lread8, csec2)
+        call bareadl(lugb, iskip8 + iskp2_8, len2_8, lread8, csec2)
      else
         len2 = 0
      endif
@@ -1090,7 +1104,7 @@ subroutine getgb2rp2(lugb, idxver, cindex, extract, gribm, leng, iret)
      ipos = 44 + inc + len1
 
      ! Copy Section 2, if necessary
-     if (iskp2 .gt. 0) then
+     if (iskp2_8 .gt. 0) then
         gribm(lencur + 1:lencur + len2) = csec2(1:len2)
         lencur = lencur + len2
      endif
