@@ -37,6 +37,7 @@ class G2(CMakePackage):
         when="@3.4.6:",
     )
     variant("w3emc", default=True, description="Enable GRIB1 through w3emc", when="@3.4.6:")
+    variant("shared", default="False", when="@3.4.7:")
 
     depends_on("jasper@:2.0.32", when="@:3.4.7")
     depends_on("jasper")
@@ -51,6 +52,7 @@ class G2(CMakePackage):
         args = [
             self.define_from_variant("CMAKE_POSITION_INDEPENDENT_CODE", "pic"),
             self.define_from_variant("BUILD_WITH_W3EMC", "w3emc"),
+            self.define_from_variant("BUILD_SHARED_LIBS", "shared"),
             self.define("BUILD_4", self.spec.satisfies("precision=4")),
             self.define("BUILD_D", self.spec.satisfies("precision=d")),
         ]
@@ -62,7 +64,7 @@ class G2(CMakePackage):
             self.spec.variants["precision"].value if self.spec.satisfies("@3.4.6:") else ("4", "d")
         )
         for suffix in precisions:
-            lib = find_libraries("libg2_" + suffix, root=self.prefix, shared=False, recursive=True)
+            lib = find_libraries("libg2_" + suffix, root=self.prefix, shared=self.spec.satisfies("+shared"), recursive=True)
             env.set("G2_LIB" + suffix, lib[0])
             env.set("G2_INC" + suffix, join_path(self.prefix, "include_" + suffix))
 
