@@ -37,109 +37,16 @@ jobs:
         sudo apt-get update
         sudo apt-get install libpng-dev zlib1g-dev libjpeg-dev
 
-    - name: cache-jasper
-      id: cache-jasper
-      uses: actions/cache@v3
+    - name: "Build dependencies"
+      uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        path: ~/jasper
-        key: jasper-${{ runner.os }}-${{ matrix.jasper-version }}
-
-    - name: checkout-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'    
-      uses: actions/checkout@v3
-      with:
-        repository: jasper-software/jasper
-        path: jasper
-        ref: version-${{ matrix.jasper-version }}
-
-    - name: build-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'
-      run: |
-        cd jasper
-        mkdir build-jasper && cd build-jasper
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/jasper
-        make -j2
-        make install
-
-    - name: checkout-bacio
-      uses: actions/checkout@v3
-      with:
-        repository: NOAA-EMC/NCEPLIBS-bacio
-        path: bacio
-        ref: develop
-
-    - name: build-bacio
-      run: |
-        cd bacio
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/bacio
-        make -j2
-        make install
-        
-    - name: checkout-w3emc
-      uses: actions/checkout@v3
-      with:
-        repository: NOAA-EMC/NCEPLIBS-w3emc
-        path: w3emc
-        ref: develop
-
-    - name: checkout-sp
-      uses: actions/checkout@v3
-      with:
-        repository: NOAA-EMC/NCEPLIBS-sp
-        path: sp
-        ref: develop
-
-    - name: build-sp
-      run: |
-        cd sp
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/sp
-        make -j2
-        make install
-          
-    - name: checkout-ip
-      uses: actions/checkout@v3
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip
-        path: ip
-        ref: develop
-
-    - name: build-ip
-      run: |
-        cd ip
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
-        make -j2
-        make install
-          
-    - name: checkout-g2c
-      uses: actions/checkout@v3
-      with:
-        repository: NOAA-EMC/NCEPLIBS-g2c
-        path: g2c
-        ref: develop
-
-    - name: build-g2c
-      run: |
-        cd g2c
-        mkdir build
-        cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/g2c -DCMAKE_PREFIX_PATH="~/jasper" ..
-        make -j2
-        make install
-                 
-    - name: build-w3emc
-      run: |
-        cd w3emc
-        mkdir build
-        cd build
-        cmake -DCMAKE_PREFIX_PATH=~/bacio -DCMAKE_INSTALL_PREFIX=~/w3emc -DBUILD_WITH_BUFR=OFF -DBUILD_WITH_EXTRA_DEPS=ON ..
-        make -j2
-        make install
+        bacio-version: develop
+        g2c-develop: develop
+        ip-version: develop
+        jasper-version: ${{ matrix.jasper-version }}
+        sp-version: develop
+        w3emc-version: develop
+        w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF
         
     - name: checkout
       uses: actions/checkout@v3
@@ -152,7 +59,7 @@ jobs:
         cd g2
         mkdir build
         cd build
-        cmake -DJasper_ROOT=~/jasper -DCMAKE_PREFIX_PATH="~/bacio;~/w3emc" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/g2 ..
+        cmake -DJasper_ROOT=$GITHUB_WORKSPACE/nceplibs/jasper -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-bacio;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-w3emc" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/g2 ..
         make -j2 VERBOSE=1
         make install
 
@@ -176,6 +83,7 @@ jobs:
         export LD_LIBRARY_PATH=/home/runner/jasper/lib
         export PATH="~/g2c/bin:$PATH"
         cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="~/bacio;~/jasper;~/sp;~/ip;~/w3emc;~/g2;~/g2c" ..
+-DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-bacio;$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-sp;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-w3emc;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c"
         make -j2 VERBOSE=1
         ctest --output-on-failure --rerun-failed --verbose
 
