@@ -28,9 +28,9 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        jasper-version: [version-2.0.33, version-3.0.5, version-4.0.0]
-        bacio-version: [v2.4.1, v2.5.0, v2.6.0]
-        w3emc-version: [v2.9.2, v2.9.3, v2.10.0]
+        jasper-version: [2.0.33, 3.0.5, 4.0.0]
+        bacio-version: [2.4.1, 2.5.0, 2.6.0]
+        w3emc-version: [2.9.2, 2.9.3, 2.10.0]
 
     steps:
 
@@ -42,10 +42,10 @@ jobs:
     - name: "Build dependencies"
       uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        bacio-version: ${{ matrix.bacio-version }}
+        bacio-version: v${{ matrix.bacio-version }}
         g2c-version: develop
-        jasper-version: ${{ matrix.jasper-version }}
-        w3emc-version: ${{ matrix.w3emc-version }}
+        jasper-version: version-${{ matrix.jasper-version }}
+        w3emc-version: v${{ matrix.w3emc-version }}
         w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF
         
     - name: checkout

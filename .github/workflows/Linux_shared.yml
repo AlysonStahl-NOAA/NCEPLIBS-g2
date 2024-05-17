@@ -27,8 +27,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        bacio-version: [v2.6.0]
-        w3emc-version: [v2.11.0]
+        bacio-version: [2.6.0]
+        w3emc-version: [2.11.0]
         config:
         - {
             options: "-DCMAKE_BUILD_TYPE=Debug"
@@ -50,23 +50,23 @@ jobs:
     - name: "Build dependencies"
       uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        bacio-version: ${{ matrix.bacio-version }}
+        bacio-version: v${{ matrix.bacio-version }}
         bacio-cmake-args: -DBUILD_SHARED_LIBS=ON
         g2c-version: develop
         g2c-cmake-args: -DENABLE_SHARED=ON
         jasper-version: version-4.0.0
         jasper-cmake-args: -DENABLE_SHARED=ON
-        w3emc-version: ${{ matrix.w3emc-version }}
+        w3emc-version: v${{ matrix.w3emc-version }}
         w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF -DENABLE_SHARED=ON -DBUILD_WITH_EXTRA_DEPS=OFF
         
     - name: checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: g2
 
     - name: cache-data
       id: cache-data
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/data
         key: data-5

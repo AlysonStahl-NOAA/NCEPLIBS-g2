@@ -43,13 +43,13 @@ jobs:
         bacio-version: develop
         g2c-develop: develop
         ip-version: develop
-        jasper-version: ${{ matrix.jasper-version }}
+        jasper-version: version-${{ matrix.jasper-version }}
         sp-version: develop
         w3emc-version: develop
         w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF
         
     - name: checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: g2
 
@@ -69,7 +69,7 @@ jobs:
         ctest --verbose --output-on-failure --rerun-failed
 
     - name: checkout-grib_utils
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with: 
         repository: NOAA-EMC/NCEPLIBS-grib_util
         path: grib_utils

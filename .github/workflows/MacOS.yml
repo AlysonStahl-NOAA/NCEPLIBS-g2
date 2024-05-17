@@ -27,8 +27,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        jasper-version: [version-4.0.0]
-        bacio-version: [v2.4.1, v2.6.0]
+        jasper-version: [4.0.0]
+        bacio-version: [2.4.1, 2.6.0]
         
     steps:
     - name: install-dependencies
@@ -42,9 +42,9 @@ jobs:
     - name: "Build dependencies"
       uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        bacio-version: ${{ matrix.bacio-version }}
+        bacio-version: v${{ matrix.bacio-version }}
         g2c-version: develop
-        jasper-version: ${{ matrix.jasper-version }}
+        jasper-version: version-${{ matrix.jasper-version }}
         w3emc-version: v2.9.2
         w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF
 
