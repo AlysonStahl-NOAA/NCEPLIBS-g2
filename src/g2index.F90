@@ -294,8 +294,6 @@ subroutine getidx2(lugb, lugi, idxver, cindex, nlen, nnum, iret)
        character(len=1), pointer, dimension(:) :: cbuf
        integer, intent(out) :: idxver, nlen, nnum, iret
      end subroutine getg2i2
-  end interface
-  interface
      subroutine getg2i2r(lugb, msk1, msk2, mnum, idxver, cbuf, &
           nlen, nnum, nmess, iret)
        integer, intent(in) :: lugb
@@ -476,15 +474,15 @@ end subroutine getg2i
 !> 005 - 008 | 005 - 012 | bytes to skip in data file before grib message (4/8 bytes)
 !> 009 - 012 | 013 - 020 | bytes to skip in message before lus (local use) set = 0, if no local section. (4/8 bytes)
 !> 013 - 016 | 021 - 028 | bytes to skip in message before gds (4/8 bytes)
-!> 017 - 020 | 029 - 032 | bytes to skip in message before pds (4 bytes)
-!> 021 - 024 | 033 - 036 | bytes to skip in message before drs (4 bytes)
-!> 025 - 028 | 037 - 040 | bytes to skip in message before bms (4 bytes)
-!> 029 - 032 | 041 - 044 | bytes to skip in message before data section (4 bytes)
-!> 033 - 040 | 045 - 052 | bytes total in the message (8 bytes)
-!> 041 - 041 | 053 - 053 | grib version number (always 2) (1 byte)
-!> 042 - 042 | 054 - 054 | message discipline (1 byte)
-!> 043 - 044 | 055 - 056 | field number within grib2 message (2 bytes)
-!> 045 -  ii | 057 -  ii | identification section (ids) (character)
+!> 017 - 020 | 029 - 036 | bytes to skip in message before pds (4/8 bytes)
+!> 021 - 024 | 037 - 040 | bytes to skip in message before drs (4 bytes)
+!> 025 - 028 | 041 - 044 | bytes to skip in message before bms (4 bytes)
+!> 029 - 032 | 045 - 048 | bytes to skip in message before data section (4 bytes)
+!> 033 - 040 | 049 - 056 | bytes total in the message (8 bytes)
+!> 041 - 041 | 057 - 057 | grib version number (always 2) (1 byte)
+!> 042 - 042 | 058 - 058 | message discipline (1 byte)
+!> 043 - 044 | 059 - 060 | field number within grib2 message (2 bytes)
+!> 045 -  ii | 061 -  ii | identification section (ids) (character)
 !> ii+1-  jj | ii+1-  jj | grid definition section (gds) (character)
 !> jj+1-  kk | jj+1-  kk | product definition section (pds) (character)
 !> kk+1-  ll | kk+1-  ll | the data representation section (drs) (character)
@@ -942,6 +940,11 @@ subroutine getgb2s2(cbuf, idxver, nlen, nnum, j, jdisc, jids, jpdtn, jpdt, jgdtn
   integer :: i, icnd, inlen, iof, ipos, jpos, lsec1, lsec3, lsec4, lsec5, numgdt, numpdt, inc
 
   interface
+     subroutine g2_gbytec1(in, siout, iskip, nbits)
+       character*1, intent(in) :: in(*)
+       integer, intent(inout) :: siout
+       integer, intent(in) :: iskip, nbits
+     end subroutine g2_gbytec1
      subroutine gf_unpack1(cgrib, lcgrib, iofst, ids, idslen, ierr)
        character(len = 1), intent(in) :: cgrib(lcgrib)
        integer, intent(in) :: lcgrib
@@ -999,21 +1002,21 @@ subroutine getgb2s2(cbuf, idxver, nlen, nnum, j, jdisc, jids, jpdtn, jpdt, jgdtn
   else
      ! Add the extra 8 bytes in the version 2 index record, starting
      ! at byte 9.
-     inc = 12
+     inc = 16
   endif
 
   ! Search for request.
   do while (iret .ne. 0 .and. k .lt. nnum)
      k = k + 1
      ! Get length of current index record.
-     call g2_gbytec(cbuf, inlen, ipos * 8, 4 * 8)    
+     call g2_gbytec1(cbuf, inlen, ipos * 8, 4 * 8)    
      if (k .le. j) then           ! skip this index
         ipos = ipos + inlen
         cycle
      endif
 
      ! Check if grib2 discipline is a match.
-     call g2_gbytec(cbuf, gfld%discipline, (ipos + inc + 41) * 8, 1 * 8)
+     call g2_gbytec1(cbuf, gfld%discipline, (ipos + inc + 41) * 8, 1 * 8)
      if (jdisc .ne. -1 .and. jdisc .ne. gfld%discipline) then
         ipos = ipos + inlen
         cycle
@@ -1022,7 +1025,7 @@ subroutine getgb2s2(cbuf, idxver, nlen, nnum, j, jdisc, jids, jpdtn, jpdt, jgdtn
      ! Check if identification section is a match.
      match1 = .false.
      ! Get length of ids.
-     call g2_gbytec(cbuf, lsec1, (ipos + inc + 44) * 8, 4 * 8)  
+     call g2_gbytec1(cbuf, lsec1, (ipos + inc + 44) * 8, 4 * 8)  
      iof = 0
      call gf_unpack1(cbuf(ipos + inc + 45), lsec1, iof, gfld%idsect, gfld%idsectlen, icnd)
      if (icnd .eq. 0) then
@@ -1043,11 +1046,11 @@ subroutine getgb2s2(cbuf, idxver, nlen, nnum, j, jdisc, jids, jpdtn, jpdt, jgdtn
      ! Check if grid definition template is a match.
      jpos = ipos + 44 + inc + lsec1
      match3 = .false.
-     call g2_gbytec(cbuf, lsec3, jpos * 8, 4 * 8)  ! get length of gds 
+     call g2_gbytec1(cbuf, lsec3, jpos * 8, 4 * 8)  ! get length of gds 
      if (jgdtn .eq. -1) then
         match3 = .true.
      else
-        call g2_gbytec(cbuf, numgdt, (jpos + 12) * 8, 2 * 8)  ! get gdt template no.
+        call g2_gbytec1(cbuf, numgdt, (jpos + 12) * 8, 2 * 8)  ! get gdt template no.
         if (jgdtn .eq. numgdt) then
            iof = 0
            call gf_unpack3(cbuf(jpos + 1), lsec3, iof, kgds, gfld%igdtmpl, &
@@ -1082,12 +1085,12 @@ subroutine getgb2s2(cbuf, idxver, nlen, nnum, j, jdisc, jids, jpdtn, jpdt, jgdtn
      match4 = .false.
 
      ! Get length of pds.      
-     call g2_gbytec(cbuf, lsec4, jpos * 8, 4 * 8)  
+     call g2_gbytec1(cbuf, lsec4, jpos * 8, 4 * 8)  
      if (jpdtn .eq. -1) then
         match4 = .true.
      else
         ! Get pdt template no.        
-        call g2_gbytec(cbuf, numpdt, (jpos + 7) * 8, 2 * 8)  
+        call g2_gbytec1(cbuf, numpdt, (jpos + 7) * 8, 2 * 8)  
         if (jpdtn .eq. numpdt) then
            iof = 0
            call gf_unpack4(cbuf(jpos + 1), lsec4, iof, gfld%ipdtnum, &
@@ -1112,8 +1115,8 @@ subroutine getgb2s2(cbuf, idxver, nlen, nnum, j, jdisc, jids, jpdtn, jpdt, jgdtn
      ! If request is found set values for derived type gfld and return.
      if (match1 .and. match3 .and. match4) then
         lpos = ipos + 1
-        call g2_gbytec(cbuf, gfld%version, (ipos + inc + 40) * 8, 1 * 8)
-        call g2_gbytec(cbuf, gfld%ifldnum, (ipos + inc + 42) * 8, 2 * 8)
+        call g2_gbytec1(cbuf, gfld%version, (ipos + inc + 40) * 8, 1 * 8)
+        call g2_gbytec1(cbuf, gfld%ifldnum, (ipos + inc + 42) * 8, 2 * 8)
         gfld%unpacked = .false.
         jpos = ipos + 44 + inc + lsec1
         if (jgdtn .eq. -1) then     ! unpack gds, if not done before
@@ -1133,12 +1136,12 @@ subroutine getgb2s2(cbuf, idxver, nlen, nnum, j, jdisc, jids, jpdtn, jpdt, jgdtn
                 gfld%ipdtmpl, gfld%ipdtlen, gfld%coord_list, gfld%num_coord, icnd)
         endif
         jpos = jpos + lsec4
-        call g2_gbytec(cbuf, lsec5, jpos * 8, 4 * 8)  ! get length of drs 
+        call g2_gbytec1(cbuf, lsec5, jpos * 8, 4 * 8)  ! get length of drs 
         iof = 0
         call gf_unpack5(cbuf(jpos + 1), lsec5, iof, gfld%ndpts, &
              gfld%idrtnum, gfld%idrtmpl, gfld%idrtlen, icnd)
         jpos = jpos + lsec5
-        call g2_gbytec(cbuf, gfld%ibmap, (jpos + 5) * 8, 1 * 8)  ! get ibmap
+        call g2_gbytec1(cbuf, gfld%ibmap, (jpos + 5) * 8, 1 * 8)  ! get ibmap
         iret = 0
      else      ! pdt did not match
         ipos = ipos + inlen
@@ -1298,10 +1301,17 @@ subroutine ix2gb2(lugb, lskip8, idxver, lgrib8, cbuf, numfld, mlen, iret)
   character cbread(LINMAX), cindex(LINMAX)
   character cids(LINMAX), cgds(LINMAX)
 
+  interface
+     subroutine g2_gbytec1(in, siout, iskip, nbits)
+       character*1, intent(in) :: in(*)
+       integer, intent(inout) :: siout
+       integer, intent(in) :: iskip, nbits
+     end subroutine g2_gbytec1
+  end interface
+
 #ifdef LOGGING
   ! Log results for debugging.
-  write(g2_log_msg, *) 'ix2gb2: lugb ', lugb, ' lskip8 ', lskip8, &
-       ' idxver ', idxver
+  write(g2_log_msg, *) 'ix2gb2: lugb ', lugb, ' lskip8 ', lskip8, ' idxver ', idxver
   call g2_log(1)
 #endif
 
@@ -1315,7 +1325,7 @@ subroutine ix2gb2(lugb, lskip8, idxver, lgrib8, cbuf, numfld, mlen, iret)
      ! changed from 4-byte ints to 8-byte ints. This is the total
      ! extra bytes that were added to the beginning of the index
      ! record in version 2.
-     inc = 12
+     inc = 16
   endif
 
   ! Initialize values and allocate buffer (at the user-provided cbuf
@@ -1354,7 +1364,7 @@ subroutine ix2gb2(lugb, lskip8, idxver, lgrib8, cbuf, numfld, mlen, iret)
   cdisc = cbread(7)
 
   ! Read the length of section 1 from the file data buffer.
-  call g2_gbytec(cbread, lensec1, 16 * 8, INT4_BITS)
+  call g2_gbytec1(cbread, lensec1, 16 * 8, INT4_BITS)
   lensec1 = min(lensec1, int(ibread8, kind(lensec1)))
 
   ! Copy section 1 values into cids array.
@@ -1387,8 +1397,8 @@ subroutine ix2gb2(lugb, lskip8, idxver, lgrib8, cbuf, numfld, mlen, iret)
 
      ! Read the 4-byte section length, and then the 1-byte section
      ! number.
-     call g2_gbytec(cbread, lensec, 0, INT4_BITS)
-     call g2_gbytec(cbread, numsec, INT4_BITS, INT1_BITS)
+     call g2_gbytec1(cbread, lensec, 0, INT4_BITS)
+     call g2_gbytec1(cbread, numsec, INT4_BITS, INT1_BITS)
 
      ! Based on the section number, generate index data for each
      ! section.
@@ -1434,8 +1444,16 @@ subroutine ix2gb2(lugb, lskip8, idxver, lgrib8, cbuf, numfld, mlen, iret)
            call g2_sbytec(cindex, locgds, mypos, INT4_BITS)   ! location of gds
            !print '(i3, a8, i4)', mypos/8, ' locgds ', locgds
            mypos = mypos + INT4_BITS
+           call g2_sbytec(cindex, int(ibskip8 - lskip8, kind(4)), mypos, INT4_BITS)  ! location of pds
+#ifdef LOGGING
+           write(g2_log_msg, *) ' writing pds location to index: mypos/8 ', mypos/8, &
+                ' loc ', int(ibskip8 - lskip8, kind(4))
+           call g2_log(2)
+#endif
+           !print '(i3, a8, i4)', mypos/8, ' locpds ', int(ibskip8 - lskip8, kind(4))
+           mypos = mypos + INT4_BITS
         else
-           inc = 12
+           inc = 16
            call g2_sbytec8(cindex, lskip8, mypos, INT8_BITS)    ! bytes to skip
            !print '(i3, a7, i4)', mypos/8, ' lskip ', lskip
            mypos = mypos + INT8_BITS
@@ -1445,14 +1463,18 @@ subroutine ix2gb2(lugb, lskip8, idxver, lgrib8, cbuf, numfld, mlen, iret)
            call g2_sbytec8(cindex, locgds8, mypos, INT8_BITS)   ! location of gds
            !print '(i3, a8, i4)', mypos/8, ' locgds ', locgds
            mypos = mypos + INT8_BITS
+           call g2_sbytec8(cindex, ibskip8 - lskip8, mypos, INT8_BITS)  ! location of pds
+           !print '(i3, a8, i4)', mypos/8, ' locpds ', int(ibskip8 - lskip8, kind(4))
+#ifdef LOGGING
+           write(g2_log_msg, *) ' writing pds location to index: mypos/8 ', mypos/8, &
+                ' loc ', ibskip8 - lskip8
+           call g2_log(2)
+#endif
+           mypos = mypos + INT8_BITS
         endif
 
         ! These ints are the same size in index version 1 and 2. The
         ! mypos variable contains the proper offset, which is
-        ! different for index version 1 and 2.
-        call g2_sbytec(cindex, int(ibskip8 - lskip8, kind(4)), mypos, INT4_BITS)  ! location of pds
-        !print '(i3, a8, i4)', mypos/8, ' locpds ', int(ibskip8 - lskip8, kind(4))
-        mypos = mypos + INT4_BITS
         mypos = mypos + INT4_BITS * 3 ! skip ahead in cbuf
         call g2_sbytec8(cindex, lgrib8, mypos, INT8_BITS)    ! len of grib2
         !print '(i3, a8, i4)', mypos/8, ' lgrib8 ', lgrib8

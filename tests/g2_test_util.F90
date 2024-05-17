@@ -156,27 +156,27 @@ subroutine read_index(cbuf, idxver, index_rec_len, b2s_message8, b2s_lus8, &
        integer, intent(inout) :: siout
        integer, intent(in) :: iskip, nbits
      end subroutine g2_gbytec1
-  end interface
-  interface
      subroutine g2_gbytec(in, iout, iskip, nbits)
        character*1, intent(in) :: in(*)
        integer, intent(inout) :: iout(*)
        integer, intent(in) :: iskip, nbits
      end subroutine g2_gbytec
-  end interface
-  interface
      subroutine g2_gbytesc(in, iout, iskip, nbits, nskip, n)
        character*1, intent(in) :: in(*)
        integer, intent(out) :: iout(*)
        integer, intent(in) :: iskip, nbits, nskip, n
      end subroutine g2_gbytesc
-  end interface
-  interface
      subroutine g2_gbytec8(in, iout, iskip, nbits)
        character*1, intent(in) :: in(*)
        integer (kind = 8), intent(inout) :: iout(*)
        integer, intent(in) :: iskip, nbits
      end subroutine g2_gbytec8
+     subroutine g2_gbytec81(in, siout, iskip, nbits)
+       character*1, intent(in) :: in(*)
+       integer (kind = 8), intent(inout) :: siout
+       integer, intent(in) :: iskip, nbits
+       integer (kind = 8) :: iout(1)
+     end subroutine g2_gbytec81
   end interface
 
   ! Get the index record len (4 byte int).
@@ -198,19 +198,20 @@ subroutine read_index(cbuf, idxver, index_rec_len, b2s_message8, b2s_lus8, &
      !print '(i3, a8, z4)', mypos/8, ' b2s_gds', b2s_gds
      mypos = mypos + INT4_BITS
      b2s_gds8 = b2s_gds
+     call g2_gbytec1(cbuf, b2s_pds, mypos, INT4_BITS)
+     mypos = mypos + INT4_BITS
+     b2s_pds8 = b2s_pds
   else
-     inc = 12
+     inc = 16
      call g2_gbytec81(cbuf, b2s_message8, 8 * 4, INT8_BITS)
      mypos = mypos + INT8_BITS
      call g2_gbytec81(cbuf, b2s_lus8, 8 * 12, INT8_BITS)
      mypos = mypos + INT8_BITS
      call g2_gbytec81(cbuf, b2s_gds8, 8 * 20, INT8_BITS)
      mypos = mypos + INT8_BITS
-     ! call g2_gbytec(cbuf, b2s_pds, 8 * 16, INT8_BITS)
+     call g2_gbytec81(cbuf, b2s_pds8, mypos, INT8_BITS)
+     mypos = mypos + INT8_BITS
   endif
-  call g2_gbytec1(cbuf, b2s_pds, mypos, INT4_BITS)
-  mypos = mypos + INT4_BITS
-  b2s_pds8 = b2s_pds
   call g2_gbytec1(cbuf, b2s_drs, mypos, INT4_BITS)
   mypos = mypos + INT4_BITS  
   b2s_drs8 = b2s_drs
