@@ -127,3 +127,5 @@ install(EXPORT ${PROJECT_NAME}Exports
   NAMESPACE ${PROJECT_NAME}::
   FILE ${PROJECT_NAME}-targets.cmake
   DESTINATION ${CONFIG_INSTALL_DESTINATION})
+
+add_subdirectory(utils)
