@@ -128,4 +128,6 @@ install(EXPORT ${PROJECT_NAME}Exports
   FILE ${PROJECT_NAME}-targets.cmake
   DESTINATION ${CONFIG_INSTALL_DESTINATION})
 
-add_subdirectory(utils)
+if (BUILD_WITH_W3EMC)
+  add_subdirectory(utils)
+endif()

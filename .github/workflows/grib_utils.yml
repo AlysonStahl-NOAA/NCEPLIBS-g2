@@ -152,7 +152,7 @@ jobs:
         cd g2
         mkdir build
         cd build
-        cmake -DJasper_ROOT=~/jasper -DCMAKE_PREFIX_PATH="~/bacio;~/w3emc" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/g2 ..
+        cmake -DJasper_ROOT=~/jasper -DCMAKE_PREFIX_PATH="~/bacio;~/w3emc;~/ip" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/g2 ..
         make -j2 VERBOSE=1
         make install
 
