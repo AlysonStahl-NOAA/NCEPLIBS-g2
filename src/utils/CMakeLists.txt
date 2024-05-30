@@ -3,22 +3,13 @@
 #
 # George Gayno, Mark Potts, Alyson Stahl
 
-# Set the compiler flags.
-if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-  set(CMAKE_Fortran_FLAGS "-g -r8 -auto ${CMAKE_Fortran_FLAGS}")
-  set(CMAKE_Fortran_FLAGS_RELEASE "-O3 ${CMAKE_Fortran_FLAGS}")
-elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
-  set(CMAKE_Fortran_FLAGS "-g -fdefault-real-8 ${CMAKE_Fortran_FLAGS}")
-  set(CMAKE_Fortran_FLAGS_RELEASE "-O3 ${CMAKE_Fortran_FLAGS}")
-endif()
-
 # This is the fortran source code.
 set(fortran_src copygb.F90)
 
 # Build the executable.
 set(exe_name copygb)
 add_executable(${exe_name} ${fortran_src})
-target_link_libraries(${exe_name} PRIVATE bacio::${bacio_name} w3emc::w3emc_d ip::ip_d)
+target_link_libraries(${exe_name} PRIVATE bacio::bacio w3emc::w3emc_d ip::ip_d)
 if(ip_VERSION LESS 5.0)
   target_link_libraries(${exe_name} PRIVATE sp::sp_d)
 endif()
