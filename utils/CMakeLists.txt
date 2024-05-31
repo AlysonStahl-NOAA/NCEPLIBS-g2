@@ -1,5 +1,6 @@
 # This is the CMake build file for utils directory in the
-# NCEPLIBS-g2 project
+# NCEPLIBS-g2 project. Will only build if BUILD_UTILS=ON
+# and BUILD_WITH_W3EMC=ON
 #
 # George Gayno, Mark Potts, Kyle Gerheiser, Alyson Stahl
 
@@ -42,7 +43,6 @@ add_executable(tocgrib2super makwmo.F90 tocgrib2super.F90)
 target_link_libraries(tocgrib2super PUBLIC ${PROJECT_NAME}_4)
 target_link_libraries(tocgrib2super PRIVATE bacio::bacio w3emc::w3emc_4 
   ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
-
 
 if(ip_VERSION LESS 5.0)
   target_link_libraries(copygb PRIVATE sp::sp_d)
