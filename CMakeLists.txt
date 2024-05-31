@@ -22,6 +22,7 @@ option(LOGGING "Turn on internal logging messages. Only useful to g2 developers.
 option(BUILD_4 "Build libg2_4.a" ON)
 option(BUILD_D "Build libg2_d.a" ON)
 option(BUILD_WITH_W3EMC "Build with NCEPLIBS-w3emc, enabling some GRIB1 functionality" ON)
+option(BUILD_UTILS "Build grib utilities" ON)
 option(G2C_COMPARE "Enable copygb2 tests using g2c_compare" OFF)
 
 # Developers can use this option to specify a local directory which
@@ -101,8 +102,10 @@ endif()
 # Build the code in the source directory.
 add_subdirectory(src)
 
-if (BUILD_WITH_W3EMC)
-  add_subdirectory(utils)
+if (BUILD_UTILS)
+  if (BUILD_WITH_W3EMC)
+    add_subdirectory(utils)
+  endif()
 endif()
 
 # This will cause the memcheck to fail if memory problems are found.
