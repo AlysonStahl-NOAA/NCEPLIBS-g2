@@ -24,7 +24,7 @@ if(OpenMP_Fortran_FOUND)
 endif()
 
 add_executable(copygb2 copygb2.F90)
-target_link_libraries(cnvgrib PUBLIC ${PROJECT_NAME}_d)
+target_link_libraries(copygb2 PUBLIC ${PROJECT_NAME}_d)
 target_link_libraries(copygb2 PRIVATE PNG::PNG ${JASPER_LIBRARIES}
   bacio::bacio w3emc::w3emc_d ip::ip_d)
 if(ip_VERSION LESS 5.0)
