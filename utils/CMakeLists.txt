@@ -12,31 +12,11 @@ target_link_libraries(cnvgrib PRIVATE bacio::bacio w3emc::w3emc_4
 
 add_executable(copygb copygb.F90)
 target_link_libraries(copygb PRIVATE bacio::bacio w3emc::w3emc_d ip::ip_d)
-if(ip_VERSION LESS 5.0)
-  target_link_libraries(copygb PRIVATE sp::sp_d)
-endif()
-if(ip_VERSION VERSION_GREATER_EQUAL 4.0.0)
-  target_compile_definitions(copygb PRIVATE USEIPMOD)
-endif()
-# Use openMP if found.
-if(OpenMP_Fortran_FOUND)
-  target_link_libraries(copygb PRIVATE OpenMP::OpenMP_Fortran)
-endif()
 
 add_executable(copygb2 copygb2.F90)
 target_link_libraries(copygb2 PUBLIC ${PROJECT_NAME}_d)
 target_link_libraries(copygb2 PRIVATE PNG::PNG ${JASPER_LIBRARIES}
   bacio::bacio w3emc::w3emc_d ip::ip_d)
-if(ip_VERSION LESS 5.0)
-  target_link_libraries(copygb2 PRIVATE sp::sp_d)
-endif()
-if(ip_VERSION VERSION_GREATER_EQUAL 4.0.0)
-  target_compile_definitions(copygb2 PRIVATE USEIPMOD)
-endif()
-# Use openMP if found.
-if(OpenMP_Fortran_FOUND)
-  target_link_libraries(copygb PRIVATE OpenMP::OpenMP_Fortran)
-endif()
 
 add_executable(degrib2 degrib2.F90 prlevel.F90 prvtime.F90)
 target_link_libraries(degrib2 PUBLIC ${PROJECT_NAME}_4)
@@ -58,10 +38,25 @@ target_link_libraries(tocgrib2 PUBLIC ${PROJECT_NAME}_4)
 target_link_libraries(tocgrib2 PRIVATE bacio::bacio w3emc::w3emc_4 
   ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
 
-  add_executable(tocgrib2super makwmo.F90 tocgrib2super.F90)
-  target_link_libraries(tocgrib2super PUBLIC ${PROJECT_NAME}_4)
-  target_link_libraries(tocgrib2super PRIVATE bacio::bacio w3emc::w3emc_4 
-    ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
+add_executable(tocgrib2super makwmo.F90 tocgrib2super.F90)
+target_link_libraries(tocgrib2super PUBLIC ${PROJECT_NAME}_4)
+target_link_libraries(tocgrib2super PRIVATE bacio::bacio w3emc::w3emc_4 
+  ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
+
+
+if(ip_VERSION LESS 5.0)
+  target_link_libraries(copygb PRIVATE sp::sp_d)
+  target_link_libraries(copygb2 PRIVATE sp::sp_d)
+endif()
+if(ip_VERSION VERSION_GREATER_EQUAL 4.0.0)
+  target_compile_definitions(copygb PRIVATE USEIPMOD)
+  target_compile_definitions(copygb2 PRIVATE USEIPMOD)
+endif()
+# Use openMP if found.
+if(OpenMP_Fortran_FOUND)
+  target_link_libraries(copygb PRIVATE OpenMP::OpenMP_Fortran)
+  target_link_libraries(copygb2 PRIVATE OpenMP::OpenMP_Fortran)
+endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
   set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-r8 -auto")
