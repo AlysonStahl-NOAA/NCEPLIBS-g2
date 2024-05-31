@@ -63,15 +63,13 @@ target_link_libraries(tocgrib2 PRIVATE bacio::bacio w3emc::w3emc_4
   target_link_libraries(tocgrib2super PRIVATE bacio::bacio w3emc::w3emc_4 
     ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
 
-if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
+if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
   set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-r8 -auto")
   set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-r8 -auto -convert big_endian -fpp")
   set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
   set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
-  set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-assume noold_ldout_format -convert big_endian -fpp")
-  set_target_properties(tocgrib PROPERTIES COMPILE_FLAGS "-assume noold_ldout_format")
-  set_target_properties(tocgrib2super PROPERTIES COMPILE_FLAGS "-assume noold_ldout_format")
-elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
+  set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
+elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
   set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-fdefault-real-8")
   set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-fdefault-real-8 -fconvert=big-endian -cpp")
   set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
