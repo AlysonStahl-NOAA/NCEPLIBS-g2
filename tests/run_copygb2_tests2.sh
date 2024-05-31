@@ -12,10 +12,10 @@ echo ""
 echo "*** Running copygb2 test"
 
 # Copy GRIB2 file.
-../src/copygb2/copygb2 -x data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2 test_gdaswave_2.grib2
+../utils/copygb2 -x data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2 test_gdaswave_2.grib2
 
 # Make degrib2 output for the copied file.
-../src/degrib2/degrib2 test_gdaswave_2.grib2 > test_gdaswave_2.grib2.degrib2
+../utils/degrib2 test_gdaswave_2.grib2 > test_gdaswave_2.grib2.degrib2
 
 # Check against expected output.
 #diff -w test_gdaswave_2.grib2.degrib2 data/ref_copygb2_test_gdaswave.degrib2.txt

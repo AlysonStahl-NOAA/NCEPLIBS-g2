@@ -11,7 +11,7 @@ echo "*** Running degrib2 tests"
 degrib2 && exit 1
 
 # Degrib2 a GRIB2 file.
-../src/degrib2/degrib2 data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2 &> test_gdaswave.degrib2.txt
+../utils/degrib2 data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2 &> test_gdaswave.degrib2.txt
 
 #echo "got:"
 #cat test_gdaswave.degrib2.txt

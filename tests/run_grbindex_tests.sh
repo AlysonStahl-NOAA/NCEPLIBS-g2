@@ -8,7 +8,7 @@ echo ""
 echo "*** Running grbindex test"
 
 # Create an index of a GRIB2 file.
-../src/grbindex/grbindex data/ref_gdaswave.t00z.wcoast.0p16.f000.grib1 test_gdaswave.grbindex.grib1.idx
+../utils/grbindex data/ref_gdaswave.t00z.wcoast.0p16.f000.grib1 test_gdaswave.grbindex.grib1.idx
 
 # Check against expected output. First 120 bytes contain differences,
 # so ignore them.
