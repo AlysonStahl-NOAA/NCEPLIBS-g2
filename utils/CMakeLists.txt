@@ -38,15 +38,54 @@ if(OpenMP_Fortran_FOUND)
   target_link_libraries(copygb PRIVATE OpenMP::OpenMP_Fortran)
 endif()
 
+add_executable(degrib2 degrib2.F90 prlevel.F90 prvtime.F90)
+target_link_libraries(degrib2 PUBLIC ${PROJECT_NAME}_4)
+target_link_libraries(degrib2 PRIVATE bacio::bacio w3emc::w3emc_4 
+  ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
+
+add_executable(grb2index grb2index.F90)
+target_link_libraries(grb2index PUBLIC ${PROJECT_NAME}_4)
+target_link_libraries(grb2index PRIVATE bacio::bacio w3emc::w3emc_4)
+
+add_executable(grbindex grbindex.f)
+target_link_libraries(grbindex PRIVATE bacio::bacio w3emc::w3emc_4)
+
+add_executable(tocgrib makwmo.F90 mkfldsep.F90 tocgrib.F90)
+target_link_libraries(tocgrib PRIVATE bacio::bacio w3emc::w3emc_4)
+
+add_executable(tocgrib2 tocgrib2.F90)
+target_link_libraries(tocgrib2 PUBLIC ${PROJECT_NAME}_4)
+target_link_libraries(tocgrib2 PRIVATE bacio::bacio w3emc::w3emc_4 
+  ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
+
+  add_executable(tocgrib2super makwmo.F90 tocgrib2super.F90)
+  target_link_libraries(tocgrib2super PUBLIC ${PROJECT_NAME}_4)
+  target_link_libraries(tocgrib2super PRIVATE bacio::bacio w3emc::w3emc_4 
+    ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
+
 if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
   set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-r8 -auto")
   set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-r8 -auto -convert big_endian -fpp")
+  set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
+  set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
+  set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-assume noold_ldout_format -convert big_endian -fpp")
+  set_target_properties(tocgrib PROPERTIES COMPILE_FLAGS "-assume noold_ldout_format")
+  set_target_properties(tocgrib2super PROPERTIES COMPILE_FLAGS "-assume noold_ldout_format")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
-set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-fdefault-real-8")
+  set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-fdefault-real-8")
   set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-fdefault-real-8 -fconvert=big-endian -cpp")
+  set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
+  set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
+  set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
 endif()
 
 # Install utilities.
 install(TARGETS cnvgrib RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(TARGETS copygb RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(TARGETS copygb2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS degrib2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS grb2index RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS grbindex RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS tocgrib RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS tocgrib2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS tocgrib2super RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
