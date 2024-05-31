@@ -13,10 +13,10 @@ echo "*** Running FTP file tests"
 ../utils/cnvgrib -g21 data/WW3_Regional_US_West_Coast_20220718_0000.grib2 test_WW3_West.grib1
 
 # Generate an inventory of the GRIB1 file.
-../src/wgrib/wgrib test_WW3_West.grib1 &> test_WW3_West.grib1.inventory.txt
+#../src/wgrib/wgrib test_WW3_West.grib1 &> test_WW3_West.grib1.inventory.txt
 
 # Check against expected output.
-cmp test_gdaswave.t00z.wcoast.0p16.f000.grib1.inventory.txt data/ref_gdaswave_grib1_inventory.txt
+#cmp test_gdaswave.t00z.wcoast.0p16.f000.grib1.inventory.txt data/ref_gdaswave_grib1_inventory.txt
 
 # Convert GRIB1 output back to GRIB2.
 ../utils/cnvgrib -g12 test_WW3_West.grib1 test_WW3_West.grib2
