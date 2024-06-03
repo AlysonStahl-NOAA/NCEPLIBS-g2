@@ -39,6 +39,7 @@ class G2(CMakePackage):
     variant("w3emc", default=True, description="Enable GRIB1 through w3emc", when="@3.4.6:")
     variant("openmp", default=False, description="Use OpenMP multithreading")
     variant("utils", default=False, description="Build grib utilities")
+    variant("g2c_compare", default=False, description="Enable copygb2 tests using g2c_compare")
 
     depends_on("jasper@:2.0.32", when="@:3.4.7")
     depends_on("jasper")
@@ -49,6 +50,7 @@ class G2(CMakePackage):
     depends_on("ip precision=d", when="^ip@4.1:")
     depends_on("sp", when="^ip@:4")
     depends_on("sp precision=d", when="^ip@:4 ^sp@2.4:")
+    depends_on("g2c@1.8: +utils", when="+g2c_compare")
     with when("+w3emc"):
         depends_on("w3emc")
         depends_on("w3emc precision=4", when="precision=4")
@@ -61,6 +63,7 @@ class G2(CMakePackage):
             self.define_from_variant("BUILD_WITH_W3EMC", "w3emc"),
             self.define("BUILD_4", self.spec.satisfies("precision=4")),
             self.define("BUILD_D", self.spec.satisfies("precision=d")),
+            self.define_from_variant("G2C_COMPARE", "g2c_compare"),
             self.define_from_variant("BUILD_UTILS", "utils"),
         ]
 
