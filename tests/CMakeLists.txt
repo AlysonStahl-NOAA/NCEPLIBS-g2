@@ -222,7 +222,8 @@ foreach(kind ${kinds})
 endforeach()
 
 # Tests that use grib utilities
-if (BUILD_UTILS)
+if (FALSE)
+#if (BUILD_UTILS)
   if (BUILD_WITH_W3EMC)
     # This fortran test is for the internals of degrib2.
     add_executable(test_degrib2_int test_degrib2_int.F90 ${CMAKE_SOURCE_DIR}/utils/prlevel.F90
@@ -231,11 +232,11 @@ if (BUILD_UTILS)
     add_test(NAME test_degrib2_int COMMAND test_degrib2_int)      
 
     gu_test(run_cnvgrib_tests)
-    #gu_test(run_copygb_tests)
-    #gu_test(run_copygb2_tests2)
-    #gu_test(run_degrib2_tests)
-    #gu_test(run_grbindex_tests)
-    #gu_test(run_grb2index_tests)
+    gu_test(run_copygb_tests)
+    gu_test(run_copygb2_tests2)
+    gu_test(run_degrib2_tests)
+    gu_test(run_grbindex_tests)
+    gu_test(run_grb2index_tests)
 
     copy_test_data(ref_copygb2_test_gdaswave_2.ip.grib2.degrib2)
     copy_test_data(ref_copygb2_test_gdaswave.degrib2.txt)
@@ -264,8 +265,7 @@ if (BUILD_UTILS)
       message(STATUS "g2c_compare not found.")
     endif()
 
-    if (FALSE)
-#    if (FTP_TEST_FILES)
+    if (FTP_TEST_FILES)
       # Copy this inventory from the test directory. It's the expected
       # inventory for one of the FTP files, after conversion to GRIB1.
       copy_test_data(ref_blend.t19z.core.f001.co.grib2.degrib2)
