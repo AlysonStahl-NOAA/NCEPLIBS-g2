@@ -45,7 +45,6 @@ class G2(CMakePackage):
     depends_on("libpng")
     depends_on("zlib-api")
     depends_on("bacio", when="@3.4.6:")
-    depends_on("g2c@1.8: +utils", when="+tests")
     depends_on("ip")
     depends_on("ip precision=d", when="^ip@4.1:")
     depends_on("sp", when="^ip@:4")
@@ -62,7 +61,6 @@ class G2(CMakePackage):
             self.define_from_variant("BUILD_WITH_W3EMC", "w3emc"),
             self.define("BUILD_4", self.spec.satisfies("precision=4")),
             self.define("BUILD_D", self.spec.satisfies("precision=d")),
-            self.define("G2C_COMPARE", self.run_tests),
             self.define_from_variant("BUILD_UTILS", "utils"),
         ]
 
