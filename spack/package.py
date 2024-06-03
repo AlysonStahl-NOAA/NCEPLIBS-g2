@@ -45,6 +45,7 @@ class G2(CMakePackage):
     depends_on("libpng")
     depends_on("zlib-api")
     depends_on("bacio", when="@3.4.6:")
+    depends_on("g2c@1.8: +utils", when="+tests")
     depends_on("ip")
     depends_on("ip precision=d", when="^ip@4.1:")
     depends_on("sp", when="^ip@:4")
