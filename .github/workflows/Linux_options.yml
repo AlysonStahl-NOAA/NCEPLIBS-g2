@@ -39,6 +39,9 @@ jobs:
         - {
             options: "-DBUILD_WITH_W3EMC=OFF"
           }
+        - { 
+          options: "-DBUILD_UTILS=ON"
+          }
 
     steps:
 
