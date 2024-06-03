@@ -222,8 +222,7 @@ foreach(kind ${kinds})
 endforeach()
 
 # Tests that use grib utilities
-if (FALSE)
-#if (BUILD_UTILS)
+if (BUILD_UTILS)
   if (BUILD_WITH_W3EMC)
     # This fortran test is for the internals of degrib2.
     add_executable(test_degrib2_int test_degrib2_int.F90 ${CMAKE_SOURCE_DIR}/utils/prlevel.F90

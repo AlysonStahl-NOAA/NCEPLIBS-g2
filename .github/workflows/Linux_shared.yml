@@ -39,9 +39,6 @@ jobs:
         - {
             options: "-DBUILD_WITH_W3EMC=OFF -DCMAKE_BUILD_TYPE=Debug"
           }
-        - { 
-            options: "-DBUILD_UTILS=ON"
-          }
 
     steps:
 
