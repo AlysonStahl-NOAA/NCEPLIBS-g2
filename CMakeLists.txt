@@ -115,6 +115,11 @@ set(MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --error-exitcode=1 --errors-f
 include(CTest)
 if(BUILD_TESTING)
   add_subdirectory(tests)
+    if (BUILD_UTILS)
+    if (BUILD_WITH_W3EMC)
+      add_subdirectory(test_utils)
+    endif()
+  endif()
 endif()
 
 # Determine whether or not to generate documentation.

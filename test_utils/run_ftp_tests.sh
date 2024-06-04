@@ -10,7 +10,7 @@ echo ""
 echo "*** Running FTP file tests"
 
 # Convert test file to GRIB1.
-../utils/cnvgrib -g21 data/WW3_Regional_US_West_Coast_20220718_0000.grib2 test_WW3_West.grib1
+../utils/cnvgrib -g21 ../tests/data/WW3_Regional_US_West_Coast_20220718_0000.grib2 test_WW3_West.grib1
 
 # Generate an inventory of the GRIB1 file.
 #../src/wgrib/wgrib test_WW3_West.grib1 &> test_WW3_West.grib1.inventory.txt

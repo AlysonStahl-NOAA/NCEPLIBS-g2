@@ -91,7 +91,7 @@ program test_create_index
      print *, 'testing g2_create_index version ', idxver
 
      ! Open GRIB2 file for reading.
-     call baopenr(lugb, 'data/' // TEST_FILE_GDAS, ios)
+     call baopenr(lugb, TEST_FILE_GDAS, ios)
      if (ios .ne. 0) stop 2
 
      ! Open output file where index will be written.
