@@ -47,17 +47,13 @@ if(OpenMP_Fortran_FOUND)
 endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-  set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-r8 -auto")
   set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-r8 -auto -convert big_endian -fpp")
   set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
   set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
-  set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
 elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
-  set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-fdefault-real-8")
   set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-fdefault-real-8 -fconvert=big-endian -cpp")
   set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
   set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
-  set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
 endif()
 
 # Install utilities.
