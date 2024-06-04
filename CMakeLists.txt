@@ -103,9 +103,7 @@ endif()
 add_subdirectory(src)
 
 if (BUILD_UTILS)
-  if (BUILD_WITH_W3EMC)
-    add_subdirectory(utils)
-  endif()
+  add_subdirectory(utils)
 endif()
 
 # This will cause the memcheck to fail if memory problems are found.
@@ -116,9 +114,7 @@ include(CTest)
 if(BUILD_TESTING)
   add_subdirectory(tests)
     if (BUILD_UTILS)
-    if (BUILD_WITH_W3EMC)
       add_subdirectory(test_utils)
-    endif()
   endif()
 endif()
 

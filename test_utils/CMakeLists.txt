@@ -78,13 +78,16 @@ endif()
 
 # Run these shell tests.
 gu_test(run_cnvgrib_tests)
-gu_test(run_copygb_tests)
 gu_test(run_copygb2_tests2)
 gu_test(run_degrib2_tests)
-gu_test(run_grbindex_tests)
 gu_test(run_grb2index_tests)
 gu_test(run_tocgrib2_tests)
 gu_test(run_tocgrib2super_tests)
+
+if (BUILD_WITH_W3EMC)
+  gu_test(run_copygb_tests)
+  gu_test(run_grbindex_tests)
+endif()
 
 if(G2C_COMPARE)
   find_program(G2C_COMPARE g2c_compare)
