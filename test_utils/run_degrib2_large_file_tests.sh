@@ -17,7 +17,7 @@ ftp_files="fv3lam.t00z.prslev.f000.grib2"
 for f in $ftp_files
 do
     echo "Testing degrib2 with large file $f"
-    ls -l data/$f
+    ls -l ../tests/data/$f
     ../utils/degrib2 ../tests/data/$f > ${f}.degrib2
     diff -w ${f}.degrib2 data/ref_${f}.degrib2
 done

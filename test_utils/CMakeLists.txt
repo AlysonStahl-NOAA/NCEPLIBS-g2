@@ -8,6 +8,7 @@ add_executable(test_degrib2_int test_degrib2_int.F90 ${CMAKE_SOURCE_DIR}/utils/p
   ${CMAKE_SOURCE_DIR}/utils/prvtime.F90)
 target_link_libraries(test_degrib2_int PUBLIC ${PROJECT_NAME}_4)
 add_test(NAME test_degrib2_int COMMAND test_degrib2_int)
+set_tests_properties(test_degrib2_int PROPERTIES LABELS noMemcheck)
 
 # Run each shell test.
 function(gu_test name)
