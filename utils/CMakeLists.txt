@@ -4,65 +4,74 @@
 #
 # George Gayno, Mark Potts, Kyle Gerheiser, Alyson Stahl
 
-add_executable(cnvgrib cnv12.F90 cnv22.F90 gds2gdt.F90 makepdsens.F90
-pds2pdtens.F90 putgbexn.F90 cnv21.F90 cnvgrib.F90 gdt2gds.F90
-makepds.F90 pds2pdt.F90 setbit.F90)
-target_link_libraries(cnvgrib PUBLIC ${PROJECT_NAME}_4)
-target_link_libraries(cnvgrib PRIVATE bacio::bacio
-  ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
+if (BUILD_D)
+  add_executable(copygb2 copygb2.F90)
+  target_link_libraries(copygb2 PUBLIC ${PROJECT_NAME}_d)
+  target_link_libraries(copygb2 PRIVATE PNG::PNG ${JASPER_LIBRARIES}
+    bacio::bacio ip::ip_d)
 
-add_executable(copygb2 copygb2.F90)
-target_link_libraries(copygb2 PUBLIC ${PROJECT_NAME}_d)
-target_link_libraries(copygb2 PRIVATE PNG::PNG ${JASPER_LIBRARIES}
-  bacio::bacio ip::ip_d)
+  if(ip_VERSION LESS 5.0)
+    target_link_libraries(copygb2 PRIVATE sp::sp_d)
+  endif()
+  if(ip_VERSION VERSION_GREATER_EQUAL 4.0.0)
+    target_compile_definitions(copygb2 PRIVATE USEIPMOD)
+  endif()
+  # Use openMP if found.
+  if(OpenMP_Fortran_FOUND)
+    target_link_libraries(copygb2 PRIVATE OpenMP::OpenMP_Fortran)
+  endif()
 
-add_executable(degrib2 degrib2.F90 prlevel.F90 prvtime.F90)
-target_link_libraries(degrib2 PUBLIC ${PROJECT_NAME}_4)
-target_link_libraries(degrib2 PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
-  PNG::PNG ${ZLIB_LIBRARY})
+  if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
+    set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-r8 -auto -convert big_endian -fpp")
+  elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
+    set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-fdefault-real-8 -fconvert=big-endian -cpp")
+  endif()
 
-add_executable(grb2index grb2index.F90)
-target_link_libraries(grb2index PUBLIC ${PROJECT_NAME}_4)
-target_link_libraries(grb2index PRIVATE bacio::bacio)
-
-add_executable(tocgrib2 tocgrib2.F90)
-target_link_libraries(tocgrib2 PUBLIC ${PROJECT_NAME}_4)
-target_link_libraries(tocgrib2 PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
-  PNG::PNG ${ZLIB_LIBRARY})
-
-add_executable(tocgrib2super makwmo.F90 tocgrib2super.F90)
-target_link_libraries(tocgrib2super PUBLIC ${PROJECT_NAME}_4)
-target_link_libraries(tocgrib2super PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
-  PNG::PNG ${ZLIB_LIBRARY})
-
-if(ip_VERSION LESS 5.0)
-  target_link_libraries(copygb2 PRIVATE sp::sp_d)
-endif()
-if(ip_VERSION VERSION_GREATER_EQUAL 4.0.0)
-  target_compile_definitions(copygb2 PRIVATE USEIPMOD)
-endif()
-# Use openMP if found.
-if(OpenMP_Fortran_FOUND)
-  target_link_libraries(copygb2 PRIVATE OpenMP::OpenMP_Fortran)
+  install(TARGETS copygb2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
-if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-  set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-r8 -auto -convert big_endian -fpp")
-  set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
-  set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
-elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
-  set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-fdefault-real-8 -fconvert=big-endian -cpp")
-  set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
-  set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
-endif()
+if (BUILD_4)
+  add_executable(cnvgrib cnv12.F90 cnv22.F90 gds2gdt.F90 makepdsens.F90
+  pds2pdtens.F90 putgbexn.F90 cnv21.F90 cnvgrib.F90 gdt2gds.F90
+  makepds.F90 pds2pdt.F90 setbit.F90)
+  target_link_libraries(cnvgrib PUBLIC ${PROJECT_NAME}_4)
+  target_link_libraries(cnvgrib PRIVATE bacio::bacio
+    ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
 
-# Install utilities.
-install(TARGETS cnvgrib RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS copygb2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS degrib2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS grb2index RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS tocgrib2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS tocgrib2super RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  add_executable(degrib2 degrib2.F90 prlevel.F90 prvtime.F90)
+  target_link_libraries(degrib2 PUBLIC ${PROJECT_NAME}_4)
+  target_link_libraries(degrib2 PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
+    PNG::PNG ${ZLIB_LIBRARY})
+
+  add_executable(grb2index grb2index.F90)
+  target_link_libraries(grb2index PUBLIC ${PROJECT_NAME}_4)
+  target_link_libraries(grb2index PRIVATE bacio::bacio)
+
+  add_executable(tocgrib2 tocgrib2.F90)
+  target_link_libraries(tocgrib2 PUBLIC ${PROJECT_NAME}_4)
+  target_link_libraries(tocgrib2 PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
+    PNG::PNG ${ZLIB_LIBRARY})
+
+  add_executable(tocgrib2super makwmo.F90 tocgrib2super.F90)
+  target_link_libraries(tocgrib2super PUBLIC ${PROJECT_NAME}_4)
+  target_link_libraries(tocgrib2super PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
+    PNG::PNG ${ZLIB_LIBRARY})
+
+
+  if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
+    set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
+    set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
+  elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
+    set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
+    set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
+  endif()
+
+  install(TARGETS cnvgrib RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  install(TARGETS degrib2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  install(TARGETS grb2index RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  install(TARGETS tocgrib2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  install(TARGETS tocgrib2super RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
 
 if (BUILD_WITH_W3EMC)
   add_executable(copygb copygb.F90)
