@@ -103,7 +103,9 @@ endif()
 add_subdirectory(src)
 
 if (BUILD_UTILS)
-  add_subdirectory(utils)
+  if (BUILD_WITH_W3EMC)
+    add_subdirectory(utils)
+  endif()
 endif()
 
 # This will cause the memcheck to fail if memory problems are found.
@@ -113,8 +115,10 @@ set(MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --error-exitcode=1 --errors-f
 include(CTest)
 if(BUILD_TESTING)
   add_subdirectory(tests)
-    if (BUILD_UTILS)
+  if (BUILD_UTILS)
+    if (BUILD_WITH_W3EMC)
       add_subdirectory(test_utils)
+    endif()
   endif()
 endif()
 

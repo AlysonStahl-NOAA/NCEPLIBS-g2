@@ -31,21 +31,22 @@ if (BUILD_D)
 endif()
 
 if (BUILD_4)
-
-  if (BUILD_WITH_W3EMC)
-    add_executable(cnvgrib cnv12.F90 cnv22.F90 gds2gdt.F90 makepdsens.F90
-    pds2pdtens.F90 putgbexn.F90 cnv21.F90 cnvgrib.F90 gdt2gds.F90
-    makepds.F90 pds2pdt.F90 setbit.F90)
-    target_link_libraries(cnvgrib PUBLIC ${PROJECT_NAME}_4)
-    target_link_libraries(cnvgrib PRIVATE bacio::bacio w3emc::w3emc_4
-      ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
-    install(TARGETS cnvgrib RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-  endif()
+  add_executable(cnvgrib cnv12.F90 cnv22.F90 gds2gdt.F90 makepdsens.F90
+  pds2pdtens.F90 putgbexn.F90 cnv21.F90 cnvgrib.F90 gdt2gds.F90
+  makepds.F90 pds2pdt.F90 setbit.F90)
+  target_link_libraries(cnvgrib PUBLIC ${PROJECT_NAME}_4)
+  target_link_libraries(cnvgrib PRIVATE bacio::bacio w3emc::w3emc_4
+    ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
 
   add_executable(degrib2 degrib2.F90 prlevel.F90 prvtime.F90)
   target_link_libraries(degrib2 PUBLIC ${PROJECT_NAME}_4)
   target_link_libraries(degrib2 PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
     PNG::PNG ${ZLIB_LIBRARY})
+  if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
+    set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
+  elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
+    set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
+  endif()
 
   add_executable(grb2index grb2index.F90)
   target_link_libraries(grb2index PUBLIC ${PROJECT_NAME}_4)
@@ -62,50 +63,46 @@ if (BUILD_4)
     PNG::PNG ${ZLIB_LIBRARY})
 
   if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-    set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
     set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
   elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
-    set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
     set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
   endif()
 
+  install(TARGETS cnvgrib RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   install(TARGETS degrib2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   install(TARGETS grb2index RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   install(TARGETS tocgrib2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   install(TARGETS tocgrib2super RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
-if (BUILD_WITH_W3EMC)
-  add_executable(copygb copygb.F90)
-  target_link_libraries(copygb PRIVATE bacio::bacio w3emc::w3emc_d ip::ip_d)
+add_executable(copygb copygb.F90)
+target_link_libraries(copygb PRIVATE bacio::bacio w3emc::w3emc_d ip::ip_d)
 
-  add_executable(grbindex grbindex.f)
-  target_link_libraries(grbindex PRIVATE bacio::bacio w3emc::w3emc_4)
+add_executable(grbindex grbindex.f)
+target_link_libraries(grbindex PRIVATE bacio::bacio w3emc::w3emc_4)
 
-  add_executable(tocgrib makwmo.F90 mkfldsep.F90 tocgrib.F90)
-  target_link_libraries(tocgrib PRIVATE bacio::bacio w3emc::w3emc_4)
+add_executable(tocgrib makwmo.F90 mkfldsep.F90 tocgrib.F90)
+target_link_libraries(tocgrib PRIVATE bacio::bacio w3emc::w3emc_4)
 
-  if(ip_VERSION LESS 5.0)
-    target_link_libraries(copygb PRIVATE sp::sp_d)
-  endif()
-  if(ip_VERSION VERSION_GREATER_EQUAL 4.0.0)
-    target_compile_definitions(copygb PRIVATE USEIPMOD)
-  endif()
-  # Use openMP if found.
-  if(OpenMP_Fortran_FOUND)
-    target_link_libraries(copygb PRIVATE OpenMP::OpenMP_Fortran)
-  endif()
-
-  # Install utilities.
-  if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-    set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-r8 -auto -heap-arrays")
-    set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
-  elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
-    set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-fdefault-real-8")
-    set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
-  endif()
-
-  install(TARGETS copygb RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-  install(TARGETS grbindex RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-  install(TARGETS tocgrib RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+if(ip_VERSION LESS 5.0)
+  target_link_libraries(copygb PRIVATE sp::sp_d)
 endif()
+if(ip_VERSION VERSION_GREATER_EQUAL 4.0.0)
+  target_compile_definitions(copygb PRIVATE USEIPMOD)
+endif()
+# Use openMP if found.
+if(OpenMP_Fortran_FOUND)
+  target_link_libraries(copygb PRIVATE OpenMP::OpenMP_Fortran)
+endif()
+
+if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
+  set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-r8 -auto -heap-arrays")
+  set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
+elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
+  set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-fdefault-real-8")
+  set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-fconvert=big-endian -cpp")
+endif()
+
+install(TARGETS copygb RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS grbindex RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS tocgrib RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
