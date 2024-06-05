@@ -87,7 +87,7 @@ if (BUILD_WITH_W3EMC)
 
   # Install utilities.
   if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-    set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-r8 -auto")
+    set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-r8 -auto -heap-arrays")
     set_target_properties(grbindex PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
   elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
     set_target_properties(copygb PROPERTIES COMPILE_FLAGS "-fdefault-real-8")
