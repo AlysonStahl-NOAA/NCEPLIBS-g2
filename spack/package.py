@@ -56,6 +56,7 @@ class G2(CMakePackage):
         depends_on("w3emc precision=4", when="precision=4")
         depends_on("w3emc precision=d", when="precision=d")
         depends_on("w3emc +extradeps", when="+utils")
+        depends_on("w3emc precision=4,d", when="+utils")
 
     def cmake_args(self):
         args = [
