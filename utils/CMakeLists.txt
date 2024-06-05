@@ -8,7 +8,7 @@ if (BUILD_D)
   add_executable(copygb2 copygb2.F90)
   target_link_libraries(copygb2 PUBLIC ${PROJECT_NAME}_d)
   target_link_libraries(copygb2 PRIVATE PNG::PNG ${JASPER_LIBRARIES}
-    bacio::bacio ip::ip_d)
+    bacio::bacio ip::ip_d w3emc::w3emc_d)
 
   if(ip_VERSION LESS 5.0)
     target_link_libraries(copygb2 PRIVATE sp::sp_d)
@@ -40,8 +40,9 @@ if (BUILD_4)
 
   add_executable(degrib2 degrib2.F90 prlevel.F90 prvtime.F90)
   target_link_libraries(degrib2 PUBLIC ${PROJECT_NAME}_4)
-  target_link_libraries(degrib2 PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
-    PNG::PNG ${ZLIB_LIBRARY})
+  target_link_libraries(degrib2 PRIVATE bacio::bacio w3emc::w3emc_4
+    ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
+    
   if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
     set_target_properties(degrib2 PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
   elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
@@ -50,17 +51,17 @@ if (BUILD_4)
 
   add_executable(grb2index grb2index.F90)
   target_link_libraries(grb2index PUBLIC ${PROJECT_NAME}_4)
-  target_link_libraries(grb2index PRIVATE bacio::bacio)
+  target_link_libraries(grb2index PRIVATE bacio::bacio w3emc::w3emc_4)
 
   add_executable(tocgrib2 tocgrib2.F90)
   target_link_libraries(tocgrib2 PUBLIC ${PROJECT_NAME}_4)
-  target_link_libraries(tocgrib2 PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
-    PNG::PNG ${ZLIB_LIBRARY})
+  target_link_libraries(tocgrib2 PRIVATE bacio::bacio w3emc::w3emc_4
+    ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
 
   add_executable(tocgrib2super makwmo.F90 tocgrib2super.F90)
   target_link_libraries(tocgrib2super PUBLIC ${PROJECT_NAME}_4)
-  target_link_libraries(tocgrib2super PRIVATE bacio::bacio ${JASPER_LIBRARIES} 
-    PNG::PNG ${ZLIB_LIBRARY})
+  target_link_libraries(tocgrib2super PRIVATE bacio::bacio w3emc::w3emc_4
+    ${JASPER_LIBRARIES} PNG::PNG ${ZLIB_LIBRARY})
 
   if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
     set_target_properties(grb2index PROPERTIES COMPILE_FLAGS "-convert big_endian -fpp")
