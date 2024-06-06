@@ -28,7 +28,7 @@ jobs:
         os: ["ubuntu-latest"]
         pic: ["+pic", "~pic"]
         precision: ["precision=d", "precision=4"]
-        w3emc: ["+w3emc+extradeps", "~w3emc"]
+        w3emc: ["+w3emc", "~w3emc"]
         utils: ["+utils", "~utils"]
     runs-on: ${{ matrix.os }}
 
