@@ -106,6 +106,22 @@ jobs:
         make -j2
         make install
 
+    - name: checkout-ip
+      uses: actions/checkout@v3
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip
+        path: ip
+        ref: develop
+    
+    - name: build-ip
+      run: |
+        cd ip
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=~/ip ..
+        make -j2
+        make install
+
     - name: checkout
       uses: actions/checkout@v3
       with: 
@@ -116,7 +132,7 @@ jobs:
         cd g2
         mkdir build 
         cd build
-        ${{ matrix.compilers }} cmake -DCMAKE_PREFIX_PATH="~/Jasper;~/bacio;~/w3emc" ..
+        ${{ matrix.compilers }} cmake -DCMAKE_PREFIX_PATH="~/Jasper;~/bacio;~/w3emc;~/ip" -DBUILD_UTILS=ON ..
         make -j2
     
     - name: test

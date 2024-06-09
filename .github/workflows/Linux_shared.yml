@@ -128,6 +128,22 @@ jobs:
         path: g2c
         ref: develop
 
+    - name: checkout-ip
+      uses: actions/checkout@v3
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip
+        path: ip
+        ref: develop
+    
+    - name: build-ip
+      run: |
+        cd ip
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=~/ip ..
+        make -j2
+        make install
+
     - name: build-g2c
       run: |
         cd g2c
@@ -155,7 +171,7 @@ jobs:
         cd g2
         mkdir build
         cd build
-        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/jasper;~/g2c;~/bacio;~/w3emc" -DCMAKE_INSTALL_PREFIX="~/g2/install" -DFTP_TEST_FILES=ON -DTEST_FILE_DIR=/home/runner/data -DBUILD_SHARED_LIBS=ON ..
+        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/jasper;~/g2c;~/bacio;~/w3emc;~/ip" -DCMAKE_INSTALL_PREFIX="~/g2/install" -DFTP_TEST_FILES=ON -DTEST_FILE_DIR=/home/runner/data -DBUILD_SHARED_LIBS=ON ..
         make -j2 VERBOSE=1
 
     - name: cache-data

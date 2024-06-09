@@ -29,6 +29,7 @@ jobs:
         pic: ["+pic", "~pic"]
         precision: ["precision=d", "precision=4"]
         w3emc: ["+w3emc", "~w3emc"]
+        utils: ["+utils", "~utils"]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -46,7 +47,7 @@ jobs:
         spack env activate g2-env
         cp $GITHUB_WORKSPACE/g2/spack/package.py $SPACK_ROOT/var/spack/repos/builtin/packages/g2/package.py
         spack develop --no-clone --path $GITHUB_WORKSPACE/g2 g2@develop
-        spack add g2@develop%gcc@11 ${{ matrix.pic }} ${{ matrix.precision }} ${{ matrix.w3emc }}
+        spack add g2@develop%gcc@11 ${{ matrix.pic }} ${{ matrix.precision }} ${{ matrix.w3emc }} ${{ matrix.utils }}
         spack external find cmake gmake
         spack concretize
         # Run installation and run CTest suite
@@ -58,7 +59,7 @@ jobs:
       uses: actions/upload-artifact@v3
       if: ${{ failure() }}
       with:
-        name: spackci-ctest-output-${{ matrix.os }}-${{ matrix.pic }}-${{ matrix.precision }}-${{ matrix.w3emc }}
+        name: spackci-ctest-output-${{ matrix.os }}-${{ matrix.pic }}-${{ matrix.precision }}-${{ matrix.w3emc }}-${{ matrix.utils }}
         path: ${{ github.workspace }}/g2/spack-build-*/Testing/Temporary/LastTest.log
 
 

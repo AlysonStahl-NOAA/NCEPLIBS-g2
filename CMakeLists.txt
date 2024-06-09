@@ -12,6 +12,7 @@ set(lib_name ${PROJECT_NAME})
 include(GNUInstallDirs)
 
 # Handle user build options.
+option(OPENMP "Use OpenMP threading" OFF)
 option(ENABLE_DOCS "Enable generation of doxygen-based documentation." OFF)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(FTP_TEST_FILES "Fetch and test with files on FTP site." OFF)
@@ -21,6 +22,8 @@ option(LOGGING "Turn on internal logging messages. Only useful to g2 developers.
 option(BUILD_4 "Build libg2_4.a" ON)
 option(BUILD_D "Build libg2_d.a" ON)
 option(BUILD_WITH_W3EMC "Build with NCEPLIBS-w3emc, enabling some GRIB1 functionality" ON)
+option(BUILD_UTILS "Build grib utilities" OFF)
+option(G2C_COMPARE "Enable copygb2 tests using g2c_compare" OFF)
 
 # Developers can use this option to specify a local directory which
 # holds the test files. They will be copied instead of fetching the
@@ -61,6 +64,11 @@ if(${CMAKE_Fortran_COMPILER_ID} MATCHES "^(GNU)$" AND ${CMAKE_Fortran_COMPILER_V
   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fallow-argument-mismatch")
 endif()
 
+# Find openMP if we need it.
+if(OPENMP)
+  find_package(OpenMP REQUIRED COMPONENTS Fortran)
+endif()
+
 # There was a bug in jasper for the intel compiler that was fixed in
 # 2.0.25.
 find_package(Jasper 2.0.25 REQUIRED)
@@ -72,7 +80,11 @@ endif()
 
 # NCEPLIBS-w3emc may be required.
 if (BUILD_WITH_W3EMC)
-  find_package(w3emc 2.9.0 REQUIRED)
+  if (BUILD_UTILS)
+    find_package(w3emc 2.10.0 REQUIRED)
+  else()
+    find_package(w3emc 2.9.0 REQUIRED)
+  endif()
 endif()
 
 # Figure whether user wants a _4, a _d, or both libraries.
@@ -89,6 +101,18 @@ endif()
 # Build the code in the source directory.
 add_subdirectory(src)
 
+if (BUILD_UTILS)
+  if (BUILD_WITH_W3EMC)
+    # Check for dependencies
+    find_package(ZLIB REQUIRED)
+    find_package(ip 3.3.3 REQUIRED)
+    if(ip_VERSION LESS 5.0)
+      find_package(sp 2.3.3 REQUIRED)
+    endif()
+    add_subdirectory(utils)
+  endif()
+endif()
+
 # This will cause the memcheck to fail if memory problems are found.
 set(MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --error-exitcode=1 --errors-for-leak-kinds=all")
 
@@ -96,6 +120,11 @@ set(MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --error-exitcode=1 --errors-f
 include(CTest)
 if(BUILD_TESTING)
   add_subdirectory(tests)
+  if (BUILD_UTILS)
+    if (BUILD_WITH_W3EMC)
+      add_subdirectory(test_utils)
+    endif()
+  endif()
 endif()
 
 # Determine whether or not to generate documentation.

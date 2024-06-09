@@ -37,22 +37,36 @@ class G2(CMakePackage):
         when="@3.4.6:",
     )
     variant("w3emc", default=True, description="Enable GRIB1 through w3emc", when="@3.4.6:")
+    variant("openmp", default=False, description="Use OpenMP multithreading")
+    variant("utils", default=False, description="Build grib utilities")
+    variant("g2c_compare", default=False, description="Enable copygb2 tests using g2c_compare")
 
     depends_on("jasper@:2.0.32", when="@:3.4.7")
     depends_on("jasper")
     depends_on("libpng")
+    depends_on("zlib-api")
     depends_on("bacio", when="@3.4.6:")
+    depends_on("ip")
+    depends_on("ip precision=d", when="^ip@4.1:")
+    depends_on("sp", when="^ip@:4")
+    depends_on("sp precision=d", when="^ip@:4 ^sp@2.4:")
+    depends_on("g2c@1.8: +utils", when="+g2c_compare")
     with when("+w3emc"):
         depends_on("w3emc")
         depends_on("w3emc precision=4", when="precision=4")
         depends_on("w3emc precision=d", when="precision=d")
+        depends_on("w3emc +extradeps", when="+utils")
+        depends_on("w3emc precision=4,d", when="+utils")
 
     def cmake_args(self):
         args = [
+            self.define_from_variant("OPENMP", "openmp"),
             self.define_from_variant("CMAKE_POSITION_INDEPENDENT_CODE", "pic"),
             self.define_from_variant("BUILD_WITH_W3EMC", "w3emc"),
             self.define("BUILD_4", self.spec.satisfies("precision=4")),
             self.define("BUILD_D", self.spec.satisfies("precision=d")),
+            self.define_from_variant("G2C_COMPARE", "g2c_compare"),
+            self.define_from_variant("BUILD_UTILS", "utils"),
         ]
 
         return args
