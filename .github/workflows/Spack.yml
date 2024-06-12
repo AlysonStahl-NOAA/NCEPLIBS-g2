@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest"]
-        variants: ["+pic precision=d +w3emc", "~pic precision=4 ~w3emc"]
+        variants: ["+pic precision=d +w3emc +utils", "~pic precision=4 ~w3emc ~utils"]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -40,7 +40,6 @@ jobs:
         use-repo-cache: true
         spack-compiler: gcc
         repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-1
-
 
   # This job validates the Spack recipe by making sure each cmake build option is represented
   recipe-check:

@@ -41,6 +41,22 @@ jobs:
         w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF
         key-prefix: Intel-
 
+    - name: checkout-ip
+      uses: actions/checkout@v3
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip
+        path: ip
+        ref: develop
+    
+    - name: build-ip
+      run: |
+        cd ip
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=~/ip ..
+        make -j2
+        make install
+
     - name: checkout
       uses: actions/checkout@v4
       with: 
@@ -51,7 +67,7 @@ jobs:
         cd g2
         mkdir build 
         cd build
-        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-bacio;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-w3emc" ..
+        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-bacio;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-w3emc;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" -DBUILD_UTILS=ON ..
         make -j2
     
     - name: test
