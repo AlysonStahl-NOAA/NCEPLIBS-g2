@@ -39,7 +39,7 @@ jobs:
         - {
             options: "-DBUILD_WITH_W3EMC=OFF"
           }
-        - { 
+        - {
             options: "-DBUILD_UTILS=ON -DBUILD_WITH_W3EMC=OFF"
           }
 
@@ -86,7 +86,7 @@ jobs:
       run: |
         mkdir ~/data
         cp $GITHUB_WORKSPACE/g2/build/tests/data/* ~/data
-        
+
     - name: test
       run: |
         cd $GITHUB_WORKSPACE/g2/build
