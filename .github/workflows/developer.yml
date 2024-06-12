@@ -34,38 +34,9 @@ jobs:
         w3emc-version: develop
         jasper-version: version-4.0.0
         w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF
-
-    - name: checkout-ip
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip
-        path: ip
-        ref: develop
-      
-    - name: build-ip
-      run: |
-        cd ip
-        mkdir build
-        cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/ip ..
-        make -j2
-        make install
-          
-    - name: checkout-g2c
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-g2c
-        path: g2c
-        ref: develop
-
-    - name: build-g2c
-      run: |
-        cd g2c
-        mkdir build
-        cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/g2c -DCMAKE_PREFIX_PATH="~/Jasper" -DBUILD_G2C=ON ..
-        make -j2
-        make install
+        ip-version: develop
+        g2c-version: develop
+        g2c-cmake-args: -DBUILD_G2C=ON
 
     - name: checkout
       uses: actions/checkout@v4
