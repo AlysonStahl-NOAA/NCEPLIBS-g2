@@ -39,7 +39,7 @@
 module pdstemplates
 
   integer, parameter :: MAXLEN = 200 !< MAXLEN max length of entries
-  integer, parameter :: MAXTEMP = 43 !< MAXTEMP maximum number of templates
+  integer, parameter :: MAXTEMP = 47 !< MAXTEMP maximum number of templates
 
   !> This is the defined type for a Product Definition Section (PDS)
   !> template.
