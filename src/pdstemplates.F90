@@ -133,8 +133,8 @@ module pdstemplates
   data templates(13)%mappdslen /31/
   data templates(13)%needext /.true./
   data (templates(13)%mappds(j), j = 1, 31) &
-       /1, 1, 1, 1, 1, 2, 1, 1, 4, 1, -1, -4, 1, -1, -4, 1, 1,  &
-       2, 1, 1, 1, 1, 1, 1, -4, 1, 1, 1, 4, 1, 4/
+       /1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1,  &
+       2, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 4/
 
   data templates(14)%template_num /13/     !  Ens cluster fcst rect. area
   data templates(14)%mappdslen /45/
@@ -154,7 +154,7 @@ module pdstemplates
   data templates(16)%mappdslen /19/
   data templates(16)%needext /.false./
   data (templates(16)%mappds(j), j = 1, 19) &
-       /1, 1, 1, 1, 1, -4, 4, 2, -4, 2, 1, 1, 1, 1, 1, 2, 1, 3, 2/
+       /1, 1, 1, 1, 1, -4, 4, 2, 4, 2, 1, 1, 1, 1, 1, 2, 1, 3, 2/
 
   data templates(17)%template_num /30/     !  Satellite Product
   data templates(17)%mappdslen /5/
@@ -178,7 +178,7 @@ module pdstemplates
   data templates(20)%mappdslen /16/
   data templates(20)%needext /.false./
   data (templates(20)%mappds(j), j = 1, 16) &
-       /1, 1, 1, 1, 1, 2, 1, 1, -4, 4, 1, 1, 1, 4, 1, 4/
+       /1, 1, 1, 1, 1, 2, 1, 1, 4, 4, 1, 1, 1, 4, 1, 4/
 
   data templates(21)%template_num /1002/     !  Cross section processed time
   data templates(21)%mappdslen /15/
@@ -298,7 +298,7 @@ module pdstemplates
   data templates(38)%mappdslen /21/        !  parameter or matrix element at a point in time
   data templates(38)%needext /.false./     !
   data (templates(38)%mappds(j), j = 1, 21) &
-       /1, 1, 1, 1, 1, 2, 1, 1, 4, 1, -1, -4, 1, -1, -4, 1, 1, 4, 4, 4, 4/
+       /1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 4, 4, 4, 4/
   !
   !    PDT 4.52   VALIDATION
   !
@@ -306,7 +306,7 @@ module pdstemplates
   data templates(39)%mappdslen /15/        !  at the Sea surface at a point in time
   data templates(39)%needext /.false./     !
   data (templates(39)%mappds(j), j = 1, 15) &
-       /1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 4, 1, -1, -4/
+       /1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4/
   !
   !    PDT 4.33  (07/29/2013)
   !
@@ -340,6 +340,39 @@ module pdstemplates
   data templates(43)%needext /.true./      !  at a point in time for partitioned parameters
   data (templates(43)%mappds(j), j = 1, 22) &
        /1, 1, 1, 1, 4, 2, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1/
+  !
+  !   PDT 4.57 (10/07/2015)
+  !
+  data templates(44)%template_num /57/     !  Analysis or Forecast at a horizontal level or in a
+  data templates(44)%mappdslen /7/         !  horizontal layer at a point in time for
+  data templates(44)%needext /.true./      !  atmospheric chemical constituents based on
+  data (templates(44)%mappds(j), j = 1, 7) & !  a distribution function.
+       /1, 1, 2, 2, 2, 2, 1/
+  !
+  !   PDT 4.60  (10/07/2015)
+  !
+  data templates(45)%template_num /60/      !  Individual ensemble reforecast, control and perturbed,
+  data templates(45)%mappdslen /24/         !  at a horizontal level or in a horizontal layer
+  data templates(45)%needext /.false./      !  at a point in time.
+  data (templates(45)%mappds(j), j = 1, 24) & 
+       /1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1, 2, 1, 1, 1, 1, 1/
+  !
+  !   PDT 4.61  (10/07/2015)
+  !
+  data templates(46)%template_num /61/      !  Individual ensemble reforecast, control and perturbed,
+  data templates(46)%mappdslen /38/         !  at a horizontal level or in a  horizontal layer
+  data templates(46)%needext /.true./       !  in a continuous or non-continuous time interval.
+  data (templates(46)%mappds(j), j = 1, 38) & 
+       /1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1, 2, 1, 1, 1, 1, & 
+       1, 2, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 4/
+  !
+  !   VALIDATION --- PDT 4.35  (10/07/2015)
+  !
+  data templates(47)%template_num /35/      !  Satellite product with or without associated 
+  data templates(47)%mappdslen /6/          !  quality values
+  data templates(47)%needext /.true./       
+  data (templates(47)%mappds(j), j = 1, 6) & 
+       /1, 1, 1, 1, 1, 1/
 
 contains
 
