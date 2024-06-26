@@ -23,7 +23,6 @@ subroutine cnv21(ifl1,ifl2)
   integer,intent(in) :: ifl1,ifl2
 
   CHARACTER(len=1),allocatable,dimension(:) :: cgrib
-  CHARACTER(len=8) :: ctemp
   type(gribfield) :: gfld
   integer,dimension(200) :: jids,jpdt,jgdt
   integer :: kpds(200),kgds(200),kens(200),kprob(2)
@@ -31,7 +30,6 @@ subroutine cnv21(ifl1,ifl2)
   integer :: currlen=0
   integer :: igds(5)=(/0,0,0,0,0/)
   real :: xprob(2)
-  logical*1,target,dimension(1) :: dummy
   logical :: unpack=.true.
   !
   !
@@ -85,7 +83,7 @@ subroutine cnv21(ifl1,ifl2)
      !   Construct PDS
      !
      call makepds(gfld%discipline,gfld%idsect,gfld%ipdtnum, &
-          gfld%ipdtmpl,gfld%ibmap,gfld%idrtnum, &
+          gfld%ipdtmpl,gfld%ibmap, &
           gfld%idrtmpl,kpds,iret)
      if (iret.ne.0) then
         print *,'cnv21: could not create pds in GRIB1'
@@ -231,7 +229,6 @@ end subroutine cnv21
 !> @param[in] ipdsnum GRIB2 Product Definition Template Number
 !> @param[in] ipdstmpl GRIB2 Product Definition Template entries for PDT 4.ipdsnum
 !> @param[in] ibmap GRIB2 bitmap indicator from octet 6, Section 6.
-!> @param[in] idrsnum GRIB2 Data Representation Template Number
 !> @param[in] idrstmpl GRIB2 Data Representation Template entries
 !> @param[out] kpds GRIB1 PDS info as specified in W3FI63.
 !> - 1 id of center
@@ -264,12 +261,12 @@ end subroutine cnv21
 !>
 !> @author Stephen Gilbert @date 2003-06-12
 subroutine makepds(idisc,idsect,ipdsnum,ipdstmpl,ibmap, &
-    idrsnum,idrstmpl,kpds,iret)
+    idrstmpl,kpds,iret)
 
   use params
 
   integer,intent(in) :: idsect(*),ipdstmpl(*),idrstmpl(*)
-  integer,intent(in) :: ipdsnum,idisc,idrsnum,ibmap
+  integer,intent(in) :: ipdsnum,idisc,ibmap
   integer,intent(out) :: kpds(*)
   integer,intent(out) :: iret
 
