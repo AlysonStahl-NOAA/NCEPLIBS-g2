@@ -519,8 +519,7 @@ PROGRAM COPYGB2
   ENDIF
   CALL CPGB(LG1,LX1,LGB,LXB,LGM,LXM,LG2, &
        IGDTN,KGDTI,IP,IPOPT,JPDTN,JPDT,NUV,IUV, &
-       JPDSB,JB,JBK,LAB,AB,LAM,AM,LXX,LWG, &
-       IDS,IBS,NBS)
+       JPDSB,JB,JBK,LAB,AB,LAM,AM,LXX,LWG)
   IF(LXX.GT.0) THEN
      CALL W3TAGE('COPYGB2 ')
   ENDIF
@@ -576,15 +575,11 @@ CONTAINS
   !> @param[in] am real mask value
   !> @param[in] lxx integer flag for verbose output
   !> @param[in] lwg integer flag for stdin selection
-  !> @param[in] ids integer (255) decimal scaling (-9999 for no change)
-  !> @param[in] ibs integer (255) binary scaling (-9999 for no change)
-  !> @param[in] nbs integer (255) number of bits (-9999 for no change)
   !>
   !> @author Iredell @date 96-07-19
   SUBROUTINE CPGB(LG1,LX1,LGB,LXB,LGM,LXM,LG2, &
        IGDTN,KGDTI,IP,IPOPT,JPDTN,JPDT,NUV,IUV, &
-       JPDSB,JB,JBK,LAB,AB,LAM,AM,LXX,LWG, &
-       IDS,IBS,NBS)
+       JPDSB,JB,JBK,LAB,AB,LAM,AM,LXX,LWG)
     USE GRIB_MOD
 
     PARAMETER(MBUF=256*1024)
@@ -594,11 +589,9 @@ CONTAINS
     INTEGER JPDSB(100),IUV(100)
     INTEGER KGDTI(200)
     INTEGER IPOPT(20)
-    INTEGER IDS(255),IBS(255),NBS(255)
     INTEGER JPDS(200),JGDS(200),JENS(5)
     INTEGER KPDSB(200),KGDSB(200),KENSB(5)
     INTEGER KPDSM(200),KGDSM(200),KENSM(5)
-    CHARACTER*80 CIN
     LOGICAL UNPACK
     TYPE( GRIBFIELD ) :: GFLD1,GFLDM
 
@@ -828,10 +821,8 @@ CONTAINS
     INTEGER JJPDT(200)
     INTEGER,TARGET :: KGDTI(200)
     INTEGER IPOPT(20)
-    INTEGER JPDS(200),JGDS(200),JENS(5)
-    INTEGER KPDS1(200),KGDS1(200),KENS1(5)
+    INTEGER JGDS(200),JENS(5)
     INTEGER KPDSB(200),KGDSB(200),KENSB(5)
-    INTEGER KPDSM(200),KGDSM(200),KENSM(5)
     INTEGER,POINTER :: TMPPTR(:)
     LOGICAL*1 LR(MF)
     LOGICAL*1,POINTER :: L1I(:),LBI(:)

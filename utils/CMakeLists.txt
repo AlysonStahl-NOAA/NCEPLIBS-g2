@@ -24,7 +24,7 @@ if (BUILD_D)
   if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
     set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-r8 -auto -convert big_endian -fpp")
   elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
-    set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-fdefault-real-8 -fconvert=big-endian -cpp")
+    set_target_properties(copygb2 PROPERTIES COMPILE_FLAGS "-fdefault-real-8 -fconvert=big-endian -cpp -frecursive")
   endif()
 
   install(TARGETS copygb2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
