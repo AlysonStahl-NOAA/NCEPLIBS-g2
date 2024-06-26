@@ -712,7 +712,6 @@ CONTAINS
                MBUF,MF,MI, &
                IGDTN,KGDTI,IP,IPOPT,JPDTN,JPDT,NUV,IUV, &
                JPDSB,JB,JBK,LAB,AB,LAM,AM, &
-               IDS,IBS,NBS, &
                LGB,LXB,MB,CBUFB,NLENB,NNUMB,MNUMB, &
                LGM,LXM,MM, &
                LG2,LXX,KR1-1,NO,IRET1)
@@ -796,9 +795,6 @@ CONTAINS
   !> @param[in] ab real map threshold
   !> @param[in] lam integer flag for mask value
   !> @param[in] am real mask value
-  !> @param[in] ids integer (255) decimal scaling (-9999 for no change)
-  !> @param[in] ibs integer (255) binary scaling (-9999 for no change)
-  !> @param[in] nbs integer (255) number of bits (-9999 for no change)
   !> @param[in] lgb integer unit number for grib file map
   !> @param[in] lxb integer unit number for grib index file map
   !> @param[in] mb integer dimension of grib field map
@@ -820,7 +816,6 @@ CONTAINS
        MBUF,MF,MI, &
        IGDTN,KGDTI,IP,IPOPT,JPDTN,JPDT,NUV,IUV, &
        JPDSB,JB,JBK,LAB,AB,LAM,AM, &
-       IDS,IBS,NBS, &
        LGB,LXB,MB,CBUFB,NLENB,NNUMB,MNUMB, &
        LGM,LXM,MM, &
        LG2,LXX,KS1,NO,IRET)
@@ -833,7 +828,6 @@ CONTAINS
     INTEGER JJPDT(200)
     INTEGER,TARGET :: KGDTI(200)
     INTEGER IPOPT(20)
-    INTEGER IDS(255),IBS(255),NBS(255)
     INTEGER JPDS(200),JGDS(200),JENS(5)
     INTEGER KPDS1(200),KGDS1(200),KENS1(5)
     INTEGER KPDSB(200),KGDSB(200),KENSB(5)
