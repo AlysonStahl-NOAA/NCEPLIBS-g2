@@ -175,9 +175,9 @@ subroutine cnv12(ifl1, ifl2, ipack, usemiss, imiss, uvvect, table_ver)
      ! set PDS Template
      if (ensemble) then    ! ensemble forecast
         call pds2pdtens(kpds, kens, kprob, xprob, kclust, kmembr, &
-             ipdsnum, ipdstmpl, numcoord, coordlist, ierr)
+             ipdsnum, ipdstmpl, ierr)
      else
-        call pds2pdt(kpds, ipdsnum, ipdstmpl, numcoord, coordlist, ierr)
+        call pds2pdt(kpds, ipdsnum, ipdstmpl, ierr)
      endif
      if (ierr .ne. 0) then
         cycle
@@ -778,30 +778,25 @@ end subroutine gds2gdt
 !> @param[in] kpds GRIB1 PDS info as specified in W3FI63.
 !> @param[out] ipdsnum GRIB2 Product Definition Template Number
 !> @param[out] ipdstmpl GRIB2 Product Definition Template entries for PDT 4.ipdsnum
-!> @param[out] numcoord number of vertical discretisation values (not implemented)
-!> @param[out] coordlist rtical discretisation values (not implemented)
 !> @param[out] iret Error return value:
 !> - 0  Successful
 !> - 1  Unrecognized GRIB1 Time Range Indicator
 !>
 !> @author Stephen Gilbert @date 2003-06-12
-subroutine pds2pdt(kpds,ipdsnum,ipdstmpl,numcoord,coordlist, &
-    iret)
+subroutine pds2pdt(kpds,ipdsnum,ipdstmpl,iret)
 
   use params
   use params_ecmwf
 
   integer,intent(in) :: kpds(*)
   integer,intent(out) :: ipdstmpl(*)
-  real,intent(out) :: coordlist(*)
-  integer,intent(out) :: ipdsnum,numcoord,iret
+  integer,intent(out) :: ipdsnum,iret
 
   integer :: idat(8),jdat(8)
   real :: rinc(5)
   logical :: ecmwf
 
   iret=0
-  numcoord=0
   ecmwf=.false.
 
   if (kpds(1).eq.98) ecmwf=.true.
@@ -1263,8 +1258,6 @@ end subroutine cnvlevel
 !> @param[in] kmember- semble membership info from PDS octest 77-86.
 !> @param[out] ipdsnum GRIB2 Product Definition Template Number.
 !> @param[out] ipdstmpl GRIB2 Product Definition Template entries for PDT 4.ipdsnum.
-!> @param[out] numcoord number of vertical discretisation values (not implemented).
-!> @param[out] coordlist- rtical discretisation values (not implemented).
 !> @param[out] iret Error return value:
 !> - 0  = Successful
 !> - 1  = Unrecognized GRIB1 Time Range Indicator for ensembles
@@ -1273,8 +1266,7 @@ end subroutine cnvlevel
 !>
 !> @author Stephen Gilbert @date 2003-06-12
 subroutine pds2pdtens(kpds,kens,kprob,xprob,kclust,kmember, &
-    ipdsnum,ipdstmpl,numcoord,coordlist, &
-    iret)
+    ipdsnum,ipdstmpl,iret)
 
   use params
 
@@ -1282,14 +1274,12 @@ subroutine pds2pdtens(kpds,kens,kprob,xprob,kclust,kmember, &
   integer,intent(in) :: kmember(*)
   real,intent(in) :: xprob(*)
   integer,intent(out) :: ipdstmpl(*)
-  real,intent(out) :: coordlist(*)
-  integer,intent(out) :: ipdsnum,numcoord,iret
+  integer,intent(out) :: ipdsnum,iret
 
   integer :: idat(8),jdat(8)
   real :: rinc(5)
 
   iret=0
-  numcoord=0
   if (kens(2).eq.1.or.kens(2).eq.2.or.kens(2).eq.3) then
     !     individual ensemble fcst...
     if (kpds(16).eq.0.or.kpds(16).eq.1.or.kpds(16).eq.10) then
