@@ -519,7 +519,7 @@ PROGRAM COPYGB2
   ENDIF
   CALL CPGB(LG1,LX1,LGB,LXB,LGM,LXM,LG2, &
        IGDTN,KGDTI,IP,IPOPT,JPDTN,JPDT,NUV,IUV, &
-       JPDSB,JB,JBK,LAB,AB,LAM,AM,LXX,LWG)
+       JPDSB,JB,JBK,LAB,AB,LAM,AM,LXX)
   IF(LXX.GT.0) THEN
      CALL W3TAGE('COPYGB2 ')
   ENDIF
@@ -574,12 +574,11 @@ CONTAINS
   !> @param[in] lam integer flag for mask value
   !> @param[in] am real mask value
   !> @param[in] lxx integer flag for verbose output
-  !> @param[in] lwg integer flag for stdin selection
   !>
   !> @author Iredell @date 96-07-19
   SUBROUTINE CPGB(LG1,LX1,LGB,LXB,LGM,LXM,LG2, &
        IGDTN,KGDTI,IP,IPOPT,JPDTN,JPDT,NUV,IUV, &
-       JPDSB,JB,JBK,LAB,AB,LAM,AM,LXX,LWG)
+       JPDSB,JB,JBK,LAB,AB,LAM,AM,LXX)
     USE GRIB_MOD
 
     PARAMETER(MBUF=256*1024)
@@ -700,12 +699,12 @@ CONTAINS
        IF(LXX.GT.0) CALL INSTRUMENT(1,KALL1,TTOT1,TMIN1,TMAX1)
        IF(IGDTN.GE.0.AND.IGDTN.LE.65534) THEN
           MF=MAX(M1,MB,MM)
-          CALL CPGB1(LG1,LX1,M1, &
+          CALL CPGB1(LG1,LX1, &
                MBUF,MF,MI, &
                IGDTN,KGDTI,IP,IPOPT,JPDTN,JPDT,NUV,IUV, &
                JPDSB,JB,JBK,LAB,AB,LAM,AM, &
                LGB,LXB,MB,CBUFB,NLENB,NNUMB,MNUMB, &
-               LGM,LXM,MM, &
+               LGM,LXM, &
                LG2,LXX,KR1-1,NO,IRET1)
        ENDIF
        IF(LAM.EQ.5) THEN       ! clean-up
@@ -768,7 +767,6 @@ CONTAINS
   !>
   !> @param[in] lg1 integer unit number for grib file 1
   !> @param[in] lx1 integer unit number for grib index file 1
-  !> @param[in] m1 integer dimension of grib field 1
   !> @param[in] mbuf integer dimension of index buffers
   !> @param[in] mf integer dimension of field
   !> @param[in] mi integer dimension of output grid
@@ -796,7 +794,6 @@ CONTAINS
   !> @param[in] mnumb integer number of index records map skipped
   !> @param[in] lgm integer unit number for grib file merge
   !> @param[in] lxm integer unit number for grib index file merge
-  !> @param[in] mm integer dimension of grib field merge
   !> @param[in] lg2 integer unit number for grib file 2
   !> @param[in] lxx integer flag for verbose output
   !> @param[in] ks1 integer input record counter
@@ -804,12 +801,12 @@ CONTAINS
   !> @param[out] iret integer return code
   !>
   !> @author Iredell @date 96-07-19
-  SUBROUTINE CPGB1(LG1,LX1,M1, &
+  SUBROUTINE CPGB1(LG1,LX1, &
        MBUF,MF,MI, &
        IGDTN,KGDTI,IP,IPOPT,JPDTN,JPDT,NUV,IUV, &
        JPDSB,JB,JBK,LAB,AB,LAM,AM, &
        LGB,LXB,MB,CBUFB,NLENB,NNUMB,MNUMB, &
-       LGM,LXM,MM, &
+       LGM,LXM, &
        LG2,LXX,KS1,NO,IRET)
     USE GRIB_MOD
     USE GRIDTEMPLATES
