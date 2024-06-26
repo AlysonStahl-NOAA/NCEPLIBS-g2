@@ -54,6 +54,7 @@ subroutine cnv22(ifl1,ifl2,ipack,usemiss,imiss,table_ver)
   integer :: table_ver
   logical :: unpack=.true.
   logical :: open_grb=.false.
+  !logical*1,target,dimension(1) :: dummy
   !
   ! ---  Initialize Variables ---
   !
