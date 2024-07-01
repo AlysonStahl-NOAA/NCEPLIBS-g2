@@ -23,7 +23,6 @@ subroutine cnv21(ifl1,ifl2)
   integer,intent(in) :: ifl1,ifl2
 
   CHARACTER(len=1),allocatable,dimension(:) :: cgrib
-  CHARACTER(len=8) :: ctemp
   type(gribfield) :: gfld
   integer,dimension(200) :: jids,jpdt,jgdt
   integer :: kpds(200),kgds(200),kens(200),kprob(2)
@@ -31,7 +30,6 @@ subroutine cnv21(ifl1,ifl2)
   integer :: currlen=0
   integer :: igds(5)=(/0,0,0,0,0/)
   real :: xprob(2)
-  logical*1,target,dimension(1) :: dummy
   logical :: unpack=.true.
   !
   !
