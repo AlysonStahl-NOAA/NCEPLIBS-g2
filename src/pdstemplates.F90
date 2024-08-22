@@ -693,6 +693,15 @@ contains
         map(nummap + 15) = -4
         nummap = nummap + 15
        enddo
+    elseif (number .eq. 61) then 
+       if (list(31) .gt. 1) then 
+          do j = 2, list(31)
+             do k = 1, 6
+                map(nummap + k) = map(32 +k)
+             end do
+             nummap = nummap + 6
+          enddo
+       endif
     elseif (number .eq. 91) then
        if (list(29).gt.1 ) then
           do j = 2, list(29)
