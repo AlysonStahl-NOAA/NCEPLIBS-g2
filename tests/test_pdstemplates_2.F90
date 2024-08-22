@@ -371,7 +371,7 @@ program test_pdstemplates
   call getpdstemplate(35, nummap, map, needext, iret)
   if (iret .ne. 0 .or. nummap .ne. 6 .or. .not. needext) stop 99
   do m = 1, nummap
-     if (map(m) .ne. expected_map_61(m)) stop 100
+     if (map(m) .ne. expected_map_35(m)) stop 100
   end do
 
   print *, 'SUCCESS'
