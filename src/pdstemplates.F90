@@ -39,7 +39,7 @@
 module pdstemplates
 
   integer, parameter :: MAXLEN = 200 !< MAXLEN max length of entries
-  integer, parameter :: MAXTEMP = 44 !< MAXTEMP maximum number of templates
+  integer, parameter :: MAXTEMP = 48 !< MAXTEMP maximum number of templates
 
   !> This is the defined type for a Product Definition Section (PDS)
   !> template.
@@ -350,6 +350,40 @@ module pdstemplates
   data (templates(44)%mappds(j), j = 1, 29) &  ! Optical Properties of Aerosol
        /1, 1, 2, 1, -1, -4, -1, -4, 1, -1, -4, -1, -4, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4,  &
        1, -1, -4, 1, 1, 1/
+  !
+  !   PDT 4.57 (10/07/2015)
+  !
+  data templates(44)%template_num /57/     !  Analysis or Forecast at a horizontal level or in a
+  data templates(44)%mappdslen /7/         !  horizontal layer at a point in time for
+  data templates(44)%needext /.true./      !  atmospheric chemical constituents based on
+  data (templates(44)%mappds(j), j = 1, 7) & !  a distribution function.
+       /1, 1, 2, 2, 2, 2, 1/
+  !
+  !   PDT 4.60  (10/07/2015)
+  !
+  data templates(45)%template_num /60/      !  Individual ensemble reforecast, control and perturbed,
+  data templates(45)%mappdslen /24/         !  at a horizontal level or in a horizontal layer
+  data templates(45)%needext /.false./      !  at a point in time.
+  data (templates(45)%mappds(j), j = 1, 24) & 
+       /1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1, 2, 1, 1, 1, 1, 1/
+  !
+  !   PDT 4.61  (10/07/2015)
+  !
+  data templates(46)%template_num /61/      !  Individual ensemble reforecast, control and perturbed,
+  data templates(46)%mappdslen /38/         !  at a horizontal level or in a  horizontal layer
+  data templates(46)%needext /.true./       !  in a continuous or non-continuous time interval.
+  data (templates(46)%mappds(j), j = 1, 38) & 
+        /1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1, 2, 1, 1, 1, 1, & 
+        1, 2, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 4/
+  !
+  !   VALIDATION --- PDT 4.35  (10/07/2015)
+  !
+  data templates(47)%template_num /35/      !  Satellite product with or without associated 
+  data templates(47)%mappdslen /6/          !  quality values
+  data templates(47)%needext /.true./       
+  data (templates(47)%mappds(j), j = 1, 6) & 
+       /1, 1, 1, 1, 1, 1/
+
 contains
 
   !> This function returns the index of specified Product
