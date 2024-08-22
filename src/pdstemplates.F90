@@ -684,7 +684,7 @@ contains
         map(nummap + 6) = 2
         map(nummap + 7) = 1
         map(nummap + 8) = 1
-        map(nummap + 8) = -4
+        map(nummap + 9) = -4
         map(nummap + 10) = 1
         map(nummap + 11) = -1
         map(nummap + 12) = -4
