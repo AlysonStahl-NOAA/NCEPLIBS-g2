@@ -178,7 +178,7 @@ program test_pdstemplates
   exp_extmap54(1:23) = (/1, 1, 1, 1, 4, 2, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1, 1/)
   exp_extmap91(1:43) = (/1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1, -1, -4, -1, -4, 2, 1, 1, 1, 1, 1, 1, 4, &
       1, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 4, 1/)
-  exp_extmap57(1:37) = (/1, 1, 2, 2, 2, 2, 1,1, -4, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, -4, 1, 1, 1, 2, 1, 1, -4, &
+  exp_extmap57(1:37) = (/1, 1, 2, 2, 2, 2, 1, 1, -4, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, -4, 1, 1, 1, 2, 1, 1, -4, &
       1, -1, -4, 1, -1, -4/)
 
   print *, 'Testing extpdstemplate with index = -1' 
@@ -455,6 +455,7 @@ program test_pdstemplates
     if (list(i) .ne. exp_map57(i)) stop 83
   end do
   call extpdstemplate(57, list, nummap, map)
+  print *, nummap
   if (nummap .ne. 37) stop 143
   do i = 1, nummap
     if (map(i) .ne. exp_extmap57(i)) stop 144
