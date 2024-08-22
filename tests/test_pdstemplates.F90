@@ -454,12 +454,10 @@ program test_pdstemplates
     if (list(i) .ne. exp_map57(i)) stop 83
   end do
   call extpdstemplate(57, list, nummap, map)
-  if (nummap .ne. 22) stop 143
+  if (nummap .ne. 22) stop 144
+  print *, map
   do i = 1, nummap
-    if (map(i) .ne. exp_extmap57(i)) then 
-      print *, i
-      stop 144
-    end if
+    if (map(i) .ne. exp_extmap57(i)) stop 145
   end do
 
   print *, 'SUCCESS'
