@@ -674,6 +674,25 @@ contains
           map(nummap + i) = 1
        enddo
        nummap = nummap + N
+    elseif (number .eq. 57) then 
+       do j = 1, list(7)
+        map(nummap + 1) = 1
+        map(nummap + 2) = -4
+        map(nummap + 3) = 1
+        map(nummap + 4) = 1
+        map(nummap + 5) = 1
+        map(nummap + 6) = 2
+        map(nummap + 7) = 1
+        map(nummap + 8) = 1
+        map(nummap + 8) = -4
+        map(nummap + 10) = 1
+        map(nummap + 11) = -1
+        map(nummap + 12) = -4
+        map(nummap + 13) = 1
+        map(nummap + 14) = -1
+        map(nummap + 15) = -4
+        nummap = nummap + 15
+       enddo
     elseif (number .eq. 91) then
        if (list(29).gt.1 ) then
           do j = 2, list(29)
