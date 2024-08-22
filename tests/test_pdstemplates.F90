@@ -143,6 +143,9 @@ program test_pdstemplates
   if (pdtlen .ne. 38) stop 63
   exp_map61(1:pdtlen) = (/1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1, 2, 1, 1, 1, 1, &
       1, 2, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 4/)
+  pdtlen = getpdtlen(35)
+  if (pdtlen .ne. 6) stop 64
+  exp_map35(1:pdtlen) = (/1,1,1,1,1,1/)
 
   ! Setting expexted extended maps
   exp_extmap3(1:32) = (/1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1, 1, 1, 1, 1, -4, -4, 4, 4, 1, -1, 4, -1, &
@@ -185,6 +188,7 @@ program test_pdstemplates
   exp_extmap57(1:22) = (/1, 1, 2, 2, 2, 2, 1, 1, -4, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4/)
   exp_extmap61(1:44) = (/1, 1, 1, 1, 1, 2, 1, 1, -4, 1, -1, -4, 1, -1, -4, 1, 1, 1, 2, 1, 1, 1, 1, &
       1, 2, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 4, 1, 1, 1, 4, 1, 4/)
+  exp_extmap35(1:11) = (/1,1,1,1,1,1,2,2,2,1,4/)
 
   print *, 'Testing extpdstemplate with index = -1' 
   ! -- returns without doing anything
@@ -476,6 +480,17 @@ program test_pdstemplates
   do i = 1, nummap
     if (map(i) .ne. exp_extmap61(i)) stop 147
   end do
+  ! Template number 35
+  call getpdstemplate(35, nummap, list, needext, iret)
+  if (iret .ne. 0 .or. nummap .ne. 6 .or. .not. needext) stop 38
+  do i = 1, nummap
+    if (list(i) .ne. exp_map35(i)) stop 85
+  end do
+  call extpdstemplate(35, list, nummap, map)
+  if (nummap .ne. 11) stop 148
+  do i = 1, nummap
+    if (map(i) .ne. exp_extmap35(i)) stop 149
+  end do  
 
   print *, 'SUCCESS'
 end program test_pdstemplates

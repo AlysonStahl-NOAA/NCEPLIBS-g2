@@ -616,6 +616,15 @@ contains
           map(nummap + i) = 1
        enddo
        nummap = nummap + N
+    elseif (number .eq. 35) then
+      do j = 1, list(6)
+          map(nummap + 1) = 2
+          map(nummap + 2) = 2
+          map(nummap + 3) = 2
+          map(nummap + 4) = 1
+          map(nummap + 5) = 4
+          nummap = nummap + 5
+      enddo
     elseif (number .eq. 42) then
        if (list(23).gt.1) then
           do j = 2, list(23)
