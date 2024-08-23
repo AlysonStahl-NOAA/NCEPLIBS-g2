@@ -34,7 +34,9 @@ jobs:
         build-utils: [ON, OFF]
         exclude:
           # utils require w3emc version >= 2.10.0
-          - w3emc-version: [2.9.2, 2.9.3]
+          - w3emc-version: 2.9.2
+            build-utils: ON
+          - w3emc-version: 2.9.3
             build-utils: ON
 
     steps:
