@@ -28,7 +28,8 @@ jobs:
       fail-fast: true
       matrix:
         bacio-version: [2.6.0]
-        w3emc-version: [2.11.0]
+        #w3emc-version: [2.11.0]
+        w3emc-version: [2.10.0]
         config:
         - {
             options: "-DCMAKE_BUILD_TYPE=Debug"
