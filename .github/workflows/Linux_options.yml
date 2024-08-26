@@ -23,7 +23,7 @@ jobs:
     env:
       FC: gfortran
       CC: gcc
-      LD_LIBRARY_PATH: $GITHUB_WORKSPACE/nceplibs/jasper/lib
+      #LD_LIBRARY_PATH: $GITHUB_WORKSPACE/nceplibs/jasper/lib
     strategy:
 #      fail-fast: true
       matrix:
