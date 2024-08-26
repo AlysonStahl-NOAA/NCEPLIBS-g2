@@ -4,7 +4,7 @@
 # Ed Hartnett
 
 # This is needed for macos to work on GitHub CI.
-#link_directories("/usr/local/lib")
+link_directories("/usr/local/lib")
 
 # Some test files are large and are kept on the NOAA EMC FTP
 # site. This function is used to download such test data. It takes two
@@ -51,7 +51,7 @@ function(create_test name kind)
     set(extra_files ${ARGN})
   endif()
   add_executable(${name}_${kind} ${name}.F90 g2_test_util.F90 ${extra_files})
-  target_link_libraries(${name}_${kind} PRIVATE g2_${kind} g2c::g2c PNG::PNG)# ${JASPER_LIBRARIES})
+  target_link_libraries(${name}_${kind} PRIVATE g2_${kind} g2c::g2c PNG::PNG ${JASPER_LIBRARIES})
   set_target_properties(${name}_${kind} PROPERTIES COMPILE_FLAGS "${fortran_${kind}_flags}")
   set_target_properties(${name}_${kind} PROPERTIES Fortran_MODULE_DIRECTORY
     ${CMAKE_CURRENT_BINARY_DIR}/include_${kind})
