@@ -522,24 +522,24 @@ subroutine addfield(cgrib, lcgrib, ipdsnum, ipdstmpl, ipdstmplen, &
      call pngpack(pfld, width, height, idrstmpl, cpack, lcpack)
      !print *, 'png packed'
 #ifdef USE_AEC
-elseif (idrsnum.eq.42) then ! AEC compression
-   if (ibmap.eq.255) then
-      call getdim(cgrib(lpos3), lensec3, width, height, iscan)
-      if (width.eq.0 .OR. height.eq.0) then
-         width=ndpts
-         height=1
-      elseif (width.eq.allones .OR. height.eq.allones) then
-         width=ndpts
-         height=1
-      elseif (ibits(iscan, 5, 1) .eq. 1) then ! Scanning mode: bit 3
-         itemp=width
-         width=height
-         height=itemp
-      endif
-   else
-      width=ndpts
-      height=1
-   endif
+  elseif (idrsnum.eq.42) then ! AEC compression
+    if (ibmap.eq.255) then
+        call getdim(cgrib(lpos3), lensec3, width, height, iscan)
+        if (width.eq.0 .OR. height.eq.0) then
+          width=ndpts
+          height=1
+        elseif (width.eq.allones .OR. height.eq.allones) then
+          width=ndpts
+          height=1
+        elseif (ibits(iscan, 5, 1) .eq. 1) then ! Scanning mode: bit 3
+          itemp=width
+          width=height
+          height=itemp
+        endif
+    else
+        width=ndpts
+        height=1
+    endif
 #if KIND==4
    call aecpack(pfld8, width, height, idrstmpl, cpack, lcpack);
    pfld = real(pfld8)
