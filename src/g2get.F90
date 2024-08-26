@@ -544,16 +544,22 @@ subroutine getfield(cgrib, lcgrib, ifldnum, igds, igdstmpl, &
      igdslen, ideflist, idefnum, ipdsnum, ipdstmpl, ipdslen, &
      coordlist, numcoord, ndpts, idrsnum, idrstmpl, idrslen,  &
      ibmap, bmap, fld, ierr)
+
+  use, intrinsic :: iso_c_binding, only: c_char, c_size_t, c_int, c_float, c_double, c_ptr, c_loc
+
   implicit none
 
-  character(len = 1), intent(in) :: cgrib(lcgrib)
+  character(len = 1, kind=c_char), intent(in) :: cgrib(lcgrib)
+  character(len = 1, kind=c_char), target :: cgrib_tmp(lcgrib)
   integer, intent(in) :: lcgrib, ifldnum
   integer, intent(out) :: igds(*), igdstmpl(*), ideflist(*)
   integer, intent(out) :: ipdsnum, ipdstmpl(*)
   integer, intent(out) :: idrsnum, idrstmpl(*)
   integer, intent(out) :: ndpts, ibmap, idefnum, numcoord
+  integer(c_size_t) :: ndpts_c
   integer, intent(out) :: igdslen, ipdslen, idrslen
   real, intent(out) :: fld(*), coordlist(*)
+  real(kind = 8), allocatable :: fld8(:)
   logical*1, intent(out) :: bmap(*)
   integer, intent(out) :: ierr
 
@@ -566,6 +572,30 @@ subroutine getfield(cgrib, lcgrib, ifldnum, igds, igdstmpl, &
   integer (kind = 8) :: lengrib8
   integer :: numfld, j, lengrib, lensec0, ipos
   integer :: lensec, isecnum, jerr, ier, numlocal
+  integer(c_size_t) :: lensec_c
+  integer(c_int) :: aec_rc
+  type(c_ptr) :: cgrib_ptr
+
+  interface
+    function g2c_aecunpackf(cpack, len, idrstmpl, ndpts, fld) bind(C, name="g2c_aecunpackf")
+        import :: c_ptr, c_size_t, c_int, c_float, c_double
+        type(c_ptr), value :: cpack
+        integer(kind=c_size_t), value :: len
+        integer(kind=c_int), dimension(*), intent(inout) :: idrstmpl
+        integer(kind=c_size_t), intent(out) :: ndpts
+        real(c_float), dimension(*), intent(out) :: fld
+        integer(c_int) :: g2c_aecunpackf
+    end function g2c_aecunpackf
+    function g2c_aecunpackd(cpack, len, idrstmpl, ndpts, fld) bind(C, name="g2c_aecunpackd")
+        import :: c_ptr, c_size_t, c_int, c_float, c_double
+        type(c_ptr), value :: cpack
+        integer(kind=c_size_t), value :: len
+        integer(kind=c_int), dimension(*), intent(inout) :: idrstmpl
+        integer(kind=c_size_t), intent(out) :: ndpts
+        real(c_double), dimension(*), intent(out) :: fld
+        integer(c_int) :: g2c_aecunpackd
+    end function g2c_aecunpackd
+  end interface
 
   have3 = .false.
   have4 = .false.
@@ -714,6 +744,19 @@ subroutine getfield(cgrib, lcgrib, ifldnum, igds, igdstmpl, &
            call simunpack(cgrib(ipos + 5), lensec - 6, idrstmpl, &
                 ndpts, fld)
            have7 = .true.
+#ifdef USE_AEC
+        elseif (idrsnum .eq. 42) then
+           lensec_c = int(lensec, kind=c_size_t)
+           cgrib_tmp = cgrib
+           cgrib_ptr = c_loc(cgrib_tmp(ipos + 5))
+#if KIND==4
+           aec_rc = g2c_aecunpackf(cpack=cgrib_ptr, len=lensec_c - 5, idrstmpl=idrstmpl, ndpts=ndpts_c, fld=fld)
+#else
+           aec_rc = g2c_aecunpackd(cpack=cgrib_ptr, len=lensec_c - 5, idrstmpl=idrstmpl, ndpts=ndpts_c, fld=fld)
+#endif
+           ndpts = int(ndpts_c)
+           have7 = .true.
+#endif /* USE_AEC */
         elseif (idrsnum .eq. 2 .or. idrsnum .eq. 3) then
            call comunpack(cgrib(ipos + 5), lensec - 6, lensec, &
                 idrsnum,idrstmpl, ndpts, fld, ier)
