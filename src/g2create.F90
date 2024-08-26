@@ -216,9 +216,9 @@ subroutine addfield(cgrib, lcgrib, ipdsnum, ipdstmpl, ipdstmplen, &
   character(len=4):: ctemp
   character(len=1), allocatable :: cpack(:)
   real, pointer, dimension(:) :: pfld
-  #if KIND==4
-    real(8), pointer, dimension(:) :: pfld8
-  #endif
+#if KIND==4
+  real(8), pointer, dimension(:) :: pfld8
+#endif
   real(4) :: coordieee(numcoord), re00, tmpre00(1)
   integer(4) :: ire00, allones
   integer :: mappds(ipdstmplen), intbmap(ngrdpts), mapdrs(idrstmplen)
