@@ -744,19 +744,6 @@ subroutine getfield(cgrib, lcgrib, ifldnum, igds, igdstmpl, &
            call simunpack(cgrib(ipos + 5), lensec - 6, idrstmpl, &
                 ndpts, fld)
            have7 = .true.
-#ifdef USE_AEC
-        elseif (idrsnum .eq. 42) then
-           lensec_c = int(lensec, kind=c_size_t)
-           cgrib_tmp = cgrib
-           cgrib_ptr = c_loc(cgrib_tmp(ipos + 5))
-#if KIND==4
-           aec_rc = g2c_aecunpackf(cpack=cgrib_ptr, len=lensec_c - 5, idrstmpl=idrstmpl, ndpts=ndpts_c, fld=fld)
-#else
-           aec_rc = g2c_aecunpackd(cpack=cgrib_ptr, len=lensec_c - 5, idrstmpl=idrstmpl, ndpts=ndpts_c, fld=fld)
-#endif
-           ndpts = int(ndpts_c)
-           have7 = .true.
-#endif /* USE_AEC */
         elseif (idrsnum .eq. 2 .or. idrsnum .eq. 3) then
            call comunpack(cgrib(ipos + 5), lensec - 6, lensec, &
                 idrsnum,idrstmpl, ndpts, fld, ier)
@@ -779,6 +766,19 @@ subroutine getfield(cgrib, lcgrib, ifldnum, igds, igdstmpl, &
            call pngunpack(cgrib(ipos + 5), lensec - 5, idrstmpl, &
                 ndpts, fld)
            have7 = .true.
+#ifdef USE_AEC
+        elseif (idrsnum .eq. 42) then
+          lensec_c = int(lensec, kind=c_size_t)
+          cgrib_tmp = cgrib
+          cgrib_ptr = c_loc(cgrib_tmp(ipos + 5))
+#if KIND==4
+        aec_rc = g2c_aecunpackf(cpack=cgrib_ptr, len=lensec_c - 5, idrstmpl=idrstmpl, ndpts=ndpts_c, fld=fld)
+#else
+        aec_rc = g2c_aecunpackd(cpack=cgrib_ptr, len=lensec_c - 5, idrstmpl=idrstmpl, ndpts=ndpts_c, fld=fld)
+#endif
+        ndpts = int(ndpts_c)
+        have7 = .true.
+#endif /* USE_AEC */
         else
            print *, 'getfield: Data Representation Template ', &
                 idrsnum, ' not yet implemented.'
