@@ -53,7 +53,7 @@ jobs:
         bacio-version: v${{ matrix.bacio-version }}
         bacio-cmake-args: -DBUILD_SHARED_LIBS=ON
         g2c-version: develop
-        g2c-cmake-args: -DENABLE_SHARED=ON
+        g2c-cmake-args: -DENABLE_SHARED=ON -DBUILD_G2C=ON
         jasper-version: version-4.0.0
         jasper-cmake-args: -DENABLE_SHARED=ON
         w3emc-version: v${{ matrix.w3emc-version }}
