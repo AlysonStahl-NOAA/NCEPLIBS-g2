@@ -36,7 +36,7 @@ jobs:
         w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF
         ip-version: develop
         g2c-version: develop
-        g2c-cmake-args: -DBUILD_G2C=ON -DUSE_AEC=ON
+        g2c-cmake-args: -DBUILD_G2C=ON 
 
     - name: checkout
       uses: actions/checkout@v4
