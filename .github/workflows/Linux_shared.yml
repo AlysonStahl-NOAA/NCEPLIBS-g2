@@ -57,7 +57,7 @@ jobs:
         jasper-version: version-4.0.0
         jasper-cmake-args: -DENABLE_SHARED=ON
         w3emc-version: v${{ matrix.w3emc-version }}
-        w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF -DBUILD_SHARED_LIBS=ON -DBUILD_WITH_EXTRA_DEPS=ON
+        w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF -DBUILD_SHARED_LIBS=ON -DBUILD_WITH_EXTRA_DEPS=OFF
         ip-version: develop
 
     - name: checkout

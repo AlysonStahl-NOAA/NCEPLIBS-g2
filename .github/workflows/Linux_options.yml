@@ -54,7 +54,7 @@ jobs:
         g2c-version: develop
         jasper-version: version-4.0.0
         w3emc-version: v${{ matrix.w3emc-version }}
-        w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF -DBUILD_WITH_EXTRA_DEPS=ON
+        w3emc-cmake-args: -DBUILD_WITH_BUFR=OFF -DBUILD_WITH_EXTRA_DEPS=OFF
         ip-version: develop
 
     - name: checkout
