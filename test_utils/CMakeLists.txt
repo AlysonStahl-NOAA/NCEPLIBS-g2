@@ -18,7 +18,6 @@ function(gu_test name)
     FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
   # Add the shell script as a test.
   add_test(NAME ${name}.sh COMMAND bash ${name}.sh)
-  set_tests_properties(${name}.sh PROPERTIES LABELS noMemcheck)
 endfunction()
 
 # Copy each necessary test data file to the binary build directory.
