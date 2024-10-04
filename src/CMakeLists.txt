@@ -15,6 +15,10 @@ if (BUILD_WITH_W3EMC)
   set(fortran_src ${fortran_src} gdt2gds.F90)
 endif()
 
+if (USE_AEC)
+  set(fortran_src ${fortran_src} g2aec.F90)
+endif()
+
 # These are the C source files.
 set(c_src mova2i.c)
 
@@ -42,6 +46,9 @@ foreach(kind ${kinds})
   # being built.
   target_compile_definitions(${lib_name}_f PUBLIC KIND=${kind})
 
+  if (USE_AEC)
+    target_compile_definitions(${lib_name}_f PRIVATE USE_AEC)
+  endif()
   # Build the C code.
   add_library(${lib_name}_c OBJECT ${c_src})
   target_include_directories(${lib_name}_c PRIVATE ${JASPER_INCLUDE_DIR})
