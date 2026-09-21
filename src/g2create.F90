@@ -280,6 +280,8 @@ subroutine addfield(cgrib, lcgrib, ipdsnum, ipdstmpl, ipdstmplen, &
   ! Get current length of GRIB message.
   call g2_gbytec1(cgrib, lencurr, 96, 32)
 
+  print *, "Called g2_gbytec1 to get current length."
+
   ! Check to see if GRIB message is already complete.
   ctemp = cgrib(lencurr-3) // cgrib(lencurr - 2) // cgrib(lencurr - 1) // cgrib(lencurr)
   if (ctemp .eq. c7777) then
