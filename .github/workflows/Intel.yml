@@ -89,11 +89,7 @@ jobs:
 
     - name: build
       run: |
-        if [ "${{ matrix.compiler }}" = "oneapi" ]; then
-          export CC=icx
-          export CXX=icpx
-          export FC=ifx
-        else
+        if [ "${{ matrix.compiler }}" = "classic" ]; then
           export CC=icc
           export CXX=icpc
           export FC=ifort
