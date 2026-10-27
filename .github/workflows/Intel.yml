@@ -40,23 +40,23 @@ jobs:
 
     steps:
 
-    - name: "Install Intel Classic"
-      if: matrix.compiler == 'classic'
-      shell: bash
-      run: |
-        cd /opt/
-        ./install-intel.sh
-        set -a
-        source /opt/intel/oneapi/setvars.sh
-        set +a
-        printenv | grep -E '^[a-zA-Z_][a-zA-Z0-9_]*=' >> $GITHUB_ENV
+    # - name: "Install Intel Classic"
+    #   if: matrix.compiler == 'classic'
+    #   shell: bash
+    #   run: |
+    #     cd /opt/
+    #     ./install-intel.sh
+    #     set -a
+    #     source /opt/intel/oneapi/setvars.sh
+    #     set +a
+    #     printenv | grep -E '^[a-zA-Z_][a-zA-Z0-9_]*=' >> $GITHUB_ENV
 
-    - name: "Install Intel OneAPI"
+    - name: "Install Intel"
       if: matrix.compiler == 'oneapi'
       uses: NOAA-EMC/ci-install-intel-toolkit@develop
       with:
         oneapi-version: 2023.2.1
-        compiler-setup: oneapi
+        compiler-setup: ${{ matrix.compiler }}
         
     - name: load-env
       shell: bash
