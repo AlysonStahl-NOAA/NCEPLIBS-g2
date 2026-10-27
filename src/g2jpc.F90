@@ -51,7 +51,7 @@ subroutine jpcpack(fld,width,height,idrstmpl,cpack,lcpack)
       integer(c_size_t), value, intent(in) :: width, height
       integer(c_int), intent(inout) :: idrstmpl(*)
       character(kind=c_char), intent(out) :: cpack(*)
-      integer(c_int), intent(out) :: lcpack
+      integer(c_size_t), intent(inout) :: lcpack
       integer(c_int) :: g2c_jpcpackd
      end function g2c_jpcpackd
      function g2c_jpcpackf(fld, width, height, idrstmpl, cpack, lcpack) bind(c)
@@ -60,7 +60,7 @@ subroutine jpcpack(fld,width,height,idrstmpl,cpack,lcpack)
       integer(c_size_t), value, intent(in) :: width, height
       integer(c_int), intent(inout) :: idrstmpl(*)
       character(kind=c_char), intent(out) :: cpack(*)
-      integer(c_int), intent(out) :: lcpack
+      integer(c_size_t), intent(inout) :: lcpack
       integer(c_int) :: g2c_jpcpackf
      end function g2c_jpcpackf
   end interface
